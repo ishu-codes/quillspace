@@ -29,3 +29,9 @@ dist-ssr
 
 # Turbo
 .turbo
+
+# Test files
+*/test.*
+
+# Raw schema
+schema.dbml

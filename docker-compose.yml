@@ -1,0 +1,36 @@
+services:
+  # api:
+  #   build: ./api/Dockerfile
+  #   container_name: quillspace-api
+  #   ports:
+  #     - "1337:${PORT}"
+  #   environment:
+  #     - DATABASE_URL=postgresql://quillspace_user:quillspace_password@localhost:5432/quillspace
+  #   depends_on:
+  #     - database
+  #   restart: unless-stopped
+
+  # web:
+  #   build: ./web/Dockerfile
+  #   container_name: quillspace-web
+  #   ports:
+  #     - "5137:5137"
+  #   environment:
+  #     - VITE_API_URL=http://localhost:1337
+  #   restart: unless-stopped
+
+  database:
+    image: postgres:16.10-alpine
+    container_name: quillspace-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: quillspace_password
+      POSTGRES_USER: quillspace_user
+      POSTGRES_DB: quillspace
+    restart: unless-stopped
+
+volumes:
+  data:

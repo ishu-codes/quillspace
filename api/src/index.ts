@@ -1,11 +1,9 @@
-import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 import os from "node:os";
+import cors from "cors";
+import app from "./app";
 
-// Express setup
 dotenv.config();
-const app = express();
 const PORT = Number(process.env.PORT) || 1337;
 
 // CORS
@@ -26,11 +24,6 @@ app.use(
     },
   })
 );
-
-// Routes
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 // Network URL
 function getLocalIP() {

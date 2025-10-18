@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/database/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  username       String?  @unique
+  email          String   @unique
+  emailVerified  Boolean  @default(false)
+  hashedPassword String
+  name           String?
+  bio            String?
+  profileImage   String?
+  role           String   @default("user")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  posts     Post[]     @relation("AuthorPosts")
+  comments  Comment[]
+  reactions Reaction[]
+  follows   Follow[]   @relation("FollowerFollows")
+  followers Follow[]   @relation("FollowingFollows")
+  bookmarks Bookmark[]
+  drafts    Draft[]
+  image     String?
+  sessions  Session[]
+  accounts  Account[]
+
+  @@map("user")
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  authorId    String
+  title       String
+  content     String
+  slug        String    @unique
+  status      String    @default("draft") // draft, published, archived
+  publishedAt DateTime?
+  viewsCount  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  author    User       @relation("AuthorPosts", fields: [authorId], references: [id])
+  comments  Comment[]
+  tags      PostTag[]
+  reactions Reaction[]
+  bookmarks Bookmark[]
+}
+
+model Comment {
+  id              Int      @id @default(autoincrement())
+  userId          String
+  postId          Int
+  content         String
+  parentCommentId Int? // nullable for root comments
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user          User       @relation(fields: [userId], references: [id])
+  post          Post       @relation(fields: [postId], references: [id])
+  parentComment Comment?   @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  replies       Comment[]  @relation("CommentReplies")
+  reactions     Reaction[]
+}
+
+model Tag {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  posts PostTag[]
+}
+
+model PostTag {
+  postId Int
+  tagId  Int
+
+  post Post @relation(fields: [postId], references: [id])
+  tag  Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  postId    Int?
+  commentId Int?
+  type      String // like, clap, heart, etc.
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  post    Post?    @relation(fields: [postId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id])
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("FollowerFollows", fields: [followerId], references: [id])
+  following User @relation("FollowingFollows", fields: [followingId], references: [id])
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  postId    Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+}
+
+model Draft {
+  id        Int      @id @default(autoincrement())
+  authorId  String
+  title     String?
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
