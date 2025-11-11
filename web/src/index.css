@@ -134,4 +134,8 @@
     button {
         cursor: pointer;
     }
+    .active {
+        user-select: none;
+        pointer-events: none;
+    }
 }

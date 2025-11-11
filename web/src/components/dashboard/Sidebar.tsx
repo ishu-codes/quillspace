@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/sidebar";
 import { HomeIcon, LibraryIcon, SettingsIcon, UserIcon } from "lucide-react";
 import Logo from "@/components/common/Logo";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 const ITEMS = [
     {
@@ -36,6 +37,7 @@ const ITEMS = [
 ];
 
 export default function AppSidebar() {
+    const location = useLocation();
     return (
         <Sidebar variant={"inset"} className="border-r p-0">
             <SidebarContent>
@@ -48,7 +50,15 @@ export default function AppSidebar() {
                             {ITEMS.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <Link to={item.url} className="text-md!">
+                                        <Link
+                                            to={item.url}
+                                            className={cn(
+                                                "text-md",
+                                                location.pathname.includes(item.url)
+                                                    ? "active bg-accent text-sidebar-accent-foreground"
+                                                    : ""
+                                            )}
+                                        >
                                             <item.icon />
                                             <span>{item.title}</span>
                                         </Link>
