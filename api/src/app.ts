@@ -15,6 +15,6 @@ app.all("/api/auth/*splat", toNodeHandler(authConfig));
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-app.use("/api/feed", requireAuth, feedRouter);
+app.use("/api/feed", feedRouter);
 
 export default app;

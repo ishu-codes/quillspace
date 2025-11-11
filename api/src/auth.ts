@@ -20,11 +20,6 @@ const authConfig: ReturnType<typeof betterAuth> = betterAuth({
     enabled: true,
   },
 
-  // user: {
-  //   fields: db.user.fields
-  // },
-  // adapter: prismaAdapter(db),
-
   //   socialProviders: {
   //     google: {
   //       clientId: process.env.GITHUB_CLIENT_ID || "",
