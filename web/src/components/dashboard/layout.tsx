@@ -8,10 +8,13 @@ export default function DashboardLayout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="w-full">
+            <div className="w-full h-screen">
                 <Navbar />
-                <Outlet />
-            </main>
+
+                <main className="w-full p-4">
+                    <Outlet />
+                </main>
+            </div>
         </SidebarProvider>
     );
 }

@@ -1,16 +1,138 @@
 import type { Blog as BlogType } from "@/types/blog";
 import Blog from "@/components/common/Blog";
+import { Link } from "react-router-dom";
 
 const BLOGS: BlogType[] = [
     {
         id: "1",
         title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
         desc: "My production system crashed at 2 AM because I underestimated vector databases.",
-        img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
         author: {
             id: "1",
             name: "CodeOrbit",
-            img: "https://miro.medium.com/v2/resize:fill:25:25/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2023-10-2 20:32:43",
+    },
+    {
+        id: "2",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "3",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "4",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "5",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "6",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "7",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "8",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
+        },
+        likes: 373,
+        comments: 12,
+        published: "2025-11-2 20:32:43",
+    },
+    {
+        id: "9",
+        title: "I Built a RAG System for 100,000 Documents — Here’s the Architecture",
+        desc: "My production system crashed at 2 AM because I underestimated vector databases.",
+        // img: "https://miro.medium.com/v2/resize:fill:200:134/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        img: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*EDbVqA4K8sMd9NQCFipr_g.png",
+        author: {
+            id: "1",
+            name: "CodeOrbit",
+            img: "https://miro.medium.com/v2/resize:fill:110:110/1*9gQO7o9Ac_v3KwHsC0bY3Q.jpeg",
         },
         likes: 373,
         comments: 12,
@@ -20,9 +142,11 @@ const BLOGS: BlogType[] = [
 
 export default function Home() {
     return (
-        <div className="flex flex-col items-center gap-4 p-4">
+        <div className="grid grid-cols-4 gap-4 p-4">
             {BLOGS.map((blog) => (
-                <Blog blog={blog} key={blog.id} className="w-full md:w-3/5" />
+                <Link to={`/blogs/${blog.id}`} key={blog.id}>
+                    <Blog blog={blog} className="w-full" />
+                </Link>
             ))}
         </div>
     );

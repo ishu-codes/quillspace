@@ -12,7 +12,7 @@ export default function Navbar() {
     const [searchTerm, setSearchTerm] = useState("");
 
     return (
-        <div className="w-full h-16 flex items-center justify-between p-4 border-b">
+        <div className="w-full h-16 flex items-center justify-between p-4 border-b sticky top-0 backdrop-blur-lg z-50">
             <div className="flex gap-2">
                 <SidebarTrigger variant={"ghost"} />
                 {/* <Link to="/">QullSpace</Link> */}
