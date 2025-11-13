@@ -6,12 +6,12 @@ import AppSidebar from "./Sidebar";
 
 export default function DashboardLayout() {
     return (
-        <SidebarProvider>
+        <SidebarProvider className="bg-background!">
             <AppSidebar />
-            <div className="w-full h-screen">
+            <div className="w-full min-h-screen">
                 <Navbar />
 
-                <main className="w-full p-4">
+                <main className="w-full h-full p-4">
                     <Outlet />
                 </main>
             </div>
