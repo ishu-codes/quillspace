@@ -1,6 +1,7 @@
 import type { BlogPost } from "@/types/blog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 interface Props {
     post: BlogPost;
@@ -12,12 +13,25 @@ export default function Preview({ post }: Props) {
             <div className="prose prose-sm dark:prose-invert max-w-none">
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
                     components={{
-                        h1: ({ node, ...props }) => (
-                            <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />
+                        h1: ({ node, children, ...props }) => (
+                            <h1
+                                id={children?.toString()}
+                                className="text-3xl font-bold mt-6 mb-3"
+                                {...props}
+                            >
+                                {children}
+                            </h1>
                         ),
-                        h2: ({ node, ...props }) => (
-                            <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />
+                        h2: ({ node, children, ...props }) => (
+                            <h2
+                                id={children?.toString()}
+                                className="text-2xl font-bold mt-5 mb-2"
+                                {...props}
+                            >
+                                {children}
+                            </h2>
                         ),
                         h3: ({ node, ...props }) => (
                             <h3 className="text-xl font-bold mt-4 mb-2" {...props} />
@@ -58,6 +72,11 @@ export default function Preview({ post }: Props) {
                                 </code>
                             );
                         },
+                        mark: (props: { children?: React.ReactNode }) => (
+                            <code className="bg-primary/15 text-primary dark:bg-primary/20 rounded-sm px-1">
+                                {props.children}
+                            </code>
+                        ),
                         table: ({ node, ...props }) => (
                             <table className="w-full border-collapse my-3" {...props} />
                         ),
