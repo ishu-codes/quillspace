@@ -16,22 +16,22 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
     {
         title: "Home",
-        url: "/home",
+        url: "/dashboard/home",
         icon: HomeIcon,
     },
     {
         title: "Library",
-        url: "/library",
+        url: "/dashboard/library",
         icon: LibraryIcon,
     },
     {
         title: "Profile",
-        url: "/profile",
+        url: "/dashboard/profile",
         icon: UserIcon,
     },
     {
         title: "Settings",
-        url: "/settings",
+        url: "/dashboard/settings",
         icon: SettingsIcon,
     },
 ];

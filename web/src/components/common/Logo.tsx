@@ -12,7 +12,11 @@ export default function Logo({ className }: Props) {
     };
 
     return (
-        <Link onClick={handleClick} to="/home" className={`flex items-center gap-2 ${className}`}>
+        <Link
+            onClick={handleClick}
+            to="/dashboard/home"
+            className={`flex items-center gap-2 ${className}`}
+        >
             <div className="p-1.5">
                 <LayoutGridIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             </div>

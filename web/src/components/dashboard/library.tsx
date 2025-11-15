@@ -9,7 +9,7 @@ import Blog from "../common/Blog";
 const LISTS = {
     yourLists: [
         {
-            id: "0",
+            id: "drafts",
             creator: {
                 id: "1",
                 name: "John",
@@ -134,7 +134,7 @@ function BlogsList({ list }: { list: BlogListItem[] }) {
     return (
         <div className="w-full grid grid-cols-3 gap-4">
             {list.map((item) => (
-                <Link to={`/library/lists/${item.id}`} key={item.id}>
+                <Link to={`/library/${item.id}`} key={item.id}>
                     <Card className="flex flex-col gap-2 p-4">
                         <div className="flex flex-col">
                             <h3 className="text-lg font-semibold">{item.title}</h3>

@@ -1,8 +1,7 @@
-import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
 import Logo from "@/components/common/Logo";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 interface Props {
     title: string;
@@ -11,6 +10,9 @@ interface Props {
 }
 
 export default function AuthLayout({ title, subtitle }: Props) {
+    const isAuthenticated = true;
+    if (isAuthenticated) return <Navigate to={"/dashboard/home"} />;
+
     return (
         <div className="min-h-screen w-full bg-linear-to-b from-zinc-100 to-white dark:from-zinc-900 dark:to-zinc-950 flex flex-col items-center justify-center p-4">
             <motion.div

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { BellIcon, SearchIcon } from "lucide-react";
+import { BellIcon, PlusIcon, SearchIcon } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "./ThemeToggle";
@@ -34,6 +34,10 @@ export default function Navbar() {
                 <ThemeToggle className="hidden md:flex" />
                 <Button variant={"ghost"} className="md:hidden">
                     <SearchIcon />
+                </Button>
+                <Button variant={"ghost"}>
+                    <PlusIcon />
+                    Create
                 </Button>
                 <Button variant={"ghost"}>
                     <BellIcon />
