@@ -20,7 +20,6 @@ import {
     ArrowUpFromLineIcon,
     Bold,
     CheckSquare,
-    ChevronDown,
     Code,
     Columns3Icon,
     Grid2X2PlusIcon,
@@ -37,7 +36,7 @@ import {
     TableIcon,
     TypeIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Markdown } from "tiptap-markdown";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
 
@@ -92,9 +91,6 @@ export default function Editor({
     onChange,
     placeholder = "Write something...",
 }: EditorProps) {
-    const [isTextMenuOpen, setIsTextMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
-
     const editor = useEditor({
         editorProps: {
             attributes: {
@@ -197,17 +193,6 @@ export default function Editor({
     });
 
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setIsTextMenuOpen(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
         if (editor && value !== editor.storage.markdown.getMarkdown()) {
             editor.commands.setContent(value);
         }
@@ -219,6 +204,22 @@ export default function Editor({
         if (editor.isActive("heading", { level: 2 })) return TEXT_OPTIONS[2];
         // if (editor.isActive("heading", { level: 3 })) return TEXT_OPTIONS[3];
         return TEXT_OPTIONS[0];
+    };
+
+    const handleSetText = (value: string) => {
+        switch (value) {
+            case "paragraph":
+                editor.chain().focus().setParagraph().run();
+                break;
+
+            case "h1":
+                editor.chain().focus().toggleHeading({ level: 1 }).run();
+                break;
+
+            case "h2":
+                editor.chain().focus().toggleHeading({ level: 2 }).run();
+                break;
+        }
     };
 
     const handleTableInsert = (value: string) => {
@@ -246,7 +247,37 @@ export default function Editor({
         <div className="w-full h-full prose prose-zinc dark:prose-invert max-w-none [&_.is-editor-empty]:text-zinc-500 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 flex flex-col">
             <div className="w-full whitespace-nowrap overflow-x-auto flex flex-wrap gap-1 p-3 border-b border-zinc-200 dark:border-zinc-800 flex-shrink-0 bg-zinc-100 dark:bg-zinc-800/30 static top-16 md:rounded-2xl">
                 <div className="flex whitespace-nowrap">
-                    <div className="relative" ref={menuRef}>
+                    <HoverCard>
+                        <button
+                            type="button"
+                            className={cn(
+                                "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                            )}
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            <HoverCardTrigger className="p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                                {/* < className="w-4 h-4 text-zinc-600 dark:text-zinc-400" /> */}
+                                {getCurrentTextStyle().icon}
+                                <span className="text-sm">{getCurrentTextStyle().label}</span>
+                            </HoverCardTrigger>
+                        </button>
+                        <HoverCardContent className="flex flex-col bg-zinc-100 dark:bg-zinc-800">
+                            {TEXT_OPTIONS.map((option) => (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() => handleSetText(option.value)}
+                                    className={cn(
+                                        "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                    )}
+                                >
+                                    {option.icon}
+                                    <span className="text-sm">{option.label}</span>
+                                </button>
+                            ))}
+                        </HoverCardContent>
+                    </HoverCard>
+                    {/* <div className="relative" ref={menuRef}>
                         <button
                             type="button"
                             onClick={() => setIsTextMenuOpen(!isTextMenuOpen)}
@@ -267,39 +298,7 @@ export default function Editor({
                                     <button
                                         key={option.value}
                                         type="button"
-                                        onClick={() => {
-                                            switch (option.value) {
-                                                case "paragraph":
-                                                    editor.chain().focus().setParagraph().run();
-                                                    break;
-
-                                                case "h1":
-                                                    editor
-                                                        .chain()
-                                                        .focus()
-                                                        .toggleHeading({ level: 1 })
-                                                        .run();
-                                                    break;
-
-                                                case "h2":
-                                                    editor
-                                                        .chain()
-                                                        .focus()
-                                                        .toggleHeading({ level: 2 })
-                                                        .run();
-                                                    break;
-
-                                                // case "h3":
-                                                //     editor
-                                                //         .chain()
-                                                //         .focus()
-                                                //         .toggleHeading({ level: 3 })
-                                                //         .run();
-                                                //     break;
-                                            }
-
-                                            setIsTextMenuOpen(false);
-                                        }}
+                                        onClick={() => handleSetText(option.value)}
                                         className={cn(
                                             "w-full flex items-center gap-2 px-3 py-1.5 text-sm",
                                             "hover:bg-zinc-100 dark:hover:bg-zinc-700",
@@ -319,8 +318,8 @@ export default function Editor({
                                 ))}
                             </div>
                         )}
-                    </div>
-                    <div className="w-px h-6 mx-1 bg-zinc-200 dark:bg-zinc-800" />
+                    </div> */}
+                    <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -361,7 +360,7 @@ export default function Editor({
                     >
                         <HighlighterIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
                     </button>
-                    <div className="w-px h-6 mx-1 bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -392,7 +391,7 @@ export default function Editor({
                     >
                         <CheckSquare className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
                     </button>
-                    <div className="w-px h-6 mx-1 bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"
                         onClick={() =>
@@ -409,6 +408,7 @@ export default function Editor({
                             className={cn(
                                 "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             )}
+                            onClick={(e) => e.preventDefault()}
                         >
                             <HoverCardTrigger className="">
                                 <Grid2X2PlusIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
@@ -436,6 +436,7 @@ export default function Editor({
                             className={cn(
                                 "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
                             )}
+                            onClick={(e) => e.preventDefault()}
                         >
                             <HoverCardTrigger className="">
                                 <Grid2X2XIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
@@ -475,7 +476,7 @@ export default function Editor({
                         </HoverCardContent>
                     </HoverCard>
 
-                    <div className="w-px h-6 mx-1 bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -505,7 +506,7 @@ export default function Editor({
                     >
                         <SeparatorHorizontalIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
                     </button>
-                    <div className="w-px h-6 mx-1 bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"
                         onClick={() => {
