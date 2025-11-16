@@ -9,6 +9,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { ThemeToggle } from "@/components/navbar/ThemeToggle";
 
 interface Props {
     currentPage: string;
@@ -61,6 +62,7 @@ export default function Titlebar({ currentPage, setCurrentPage, setPreviewMode }
             </div>
 
             <div className="hidden md:flex gap-2">
+                <ThemeToggle />
                 <Button variant="outline" size="sm">
                     Save Draft
                 </Button>

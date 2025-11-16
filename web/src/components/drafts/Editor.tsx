@@ -110,12 +110,12 @@ export default function Editor({
                 },
                 codeBlock: {
                     HTMLAttributes: {
-                        class: "block rounded-md bg-zinc-100 dark:bg-zinc-900 p-4 font-mono text-sm text-zinc-900 dark:text-zinc-200 my-4",
+                        class: "block rounded-md bg-zinc-100 dark:bg-zinc-800/30 p-4 font-mono text-sm text-zinc-900 dark:text-zinc-200 my-4",
                     },
                 },
                 blockquote: {
                     HTMLAttributes: {
-                        class: "border-l-4 border-zinc-300 dark:border-zinc-700 pl-4",
+                        class: "bg-primary/5 text-muted-foreground italic border-l-4 border-primary py-2 pl-4",
                     },
                 },
                 orderedList: {
@@ -277,48 +277,6 @@ export default function Editor({
                             ))}
                         </HoverCardContent>
                     </HoverCard>
-                    {/* <div className="relative" ref={menuRef}>
-                        <button
-                            type="button"
-                            onClick={() => setIsTextMenuOpen(!isTextMenuOpen)}
-                            className={cn(
-                                "flex items-center gap-2 p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors",
-                                isTextMenuOpen && "bg-zinc-100 dark:bg-zinc-800"
-                            )}
-                        >
-                            {getCurrentTextStyle().icon}
-                            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                                {getCurrentTextStyle().label}
-                            </span>
-                            <ChevronDown className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
-                        </button>
-                        {isTextMenuOpen && (
-                            <div className="absolute z-50 w-40 mt-1 py-1 rounded-md shadow-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
-                                {TEXT_OPTIONS.map((option) => (
-                                    <button
-                                        key={option.value}
-                                        type="button"
-                                        onClick={() => handleSetText(option.value)}
-                                        className={cn(
-                                            "w-full flex items-center gap-2 px-3 py-1.5 text-sm",
-                                            "hover:bg-zinc-100 dark:hover:bg-zinc-700",
-                                            (option.value === "paragraph" &&
-                                                editor.isActive("paragraph")) ||
-                                                (option.value === "h1" &&
-                                                    editor.isActive("heading", { level: 1 })) ||
-                                                (option.value === "h2" &&
-                                                    editor.isActive("heading", { level: 2 }))
-                                                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                                                : "text-zinc-600 dark:text-zinc-300"
-                                        )}
-                                    >
-                                        {option.icon}
-                                        <span className="flex-1 text-left">{option.label}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div> */}
                     <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
                     <button
                         type="button"

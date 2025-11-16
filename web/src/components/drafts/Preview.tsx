@@ -9,7 +9,7 @@ interface Props {
 
 export default function Preview({ post }: Props) {
     return (
-        <div className="flex-1 overflow-auto p-4 rounded-lg bg-muted/30">
+        <div className="flex-1 overflow-auto p-4 rounded-lg">
             <div className="prose prose-sm dark:prose-invert max-w-none">
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
