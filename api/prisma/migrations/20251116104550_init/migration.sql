@@ -1,17 +1,16 @@
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
-    "username" TEXT,
+    "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "hashedPassword" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "bio" TEXT,
-    "profileImage" TEXT,
+    "img" TEXT,
     "role" TEXT NOT NULL DEFAULT 'user',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "image" TEXT,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -21,7 +20,9 @@ CREATE TABLE "Post" (
     "id" SERIAL NOT NULL,
     "authorId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
+    "desc" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "featuredImg" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'draft',
     "publishedAt" TIMESTAMP(3),
@@ -99,7 +100,9 @@ CREATE TABLE "Bookmark" (
 CREATE TABLE "Draft" (
     "id" SERIAL NOT NULL,
     "authorId" TEXT NOT NULL,
-    "title" TEXT,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "img" TEXT,
     "content" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

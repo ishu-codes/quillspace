@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "List" ALTER COLUMN "desc" DROP NOT NULL,
+ALTER COLUMN "isPublic" SET DEFAULT false,
+ALTER COLUMN "itemsCount" SET DEFAULT 0;

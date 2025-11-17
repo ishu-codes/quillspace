@@ -10,25 +10,25 @@ datasource db {
 
 model User {
   id             String   @id @default(uuid())
-  username       String?  @unique
+  username       String   @unique
   email          String   @unique
   emailVerified  Boolean  @default(false)
   hashedPassword String
-  name           String?
+  name           String
   bio            String?
-  profileImage   String?
+  img            String?
   role           String   @default("user")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   posts     Post[]     @relation("AuthorPosts")
+  lists     List[]     @relation("AuthorLists")
   comments  Comment[]
   reactions Reaction[]
   follows   Follow[]   @relation("FollowerFollows")
   followers Follow[]   @relation("FollowingFollows")
   bookmarks Bookmark[]
-  drafts    Draft[]
-  image     String?
+  // drafts    Draft[]
   sessions  Session[]
   accounts  Account[]
 
@@ -39,9 +39,12 @@ model Post {
   id          Int       @id @default(autoincrement())
   authorId    String
   title       String
+  desc        String
   content     String
+  featuredImg String
   slug        String    @unique
   status      String    @default("draft") // draft, published, archived
+  lists      PostList[]
   publishedAt DateTime?
   viewsCount  Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -52,6 +55,36 @@ model Post {
   tags      PostTag[]
   reactions Reaction[]
   bookmarks Bookmark[]
+}
+
+model List {
+  id         String   @id @default(uuid())
+  authorId   String
+  title      String
+  desc       String?
+  isPublic   Boolean  @default(false)
+  itemsCount Int      @default(0)
+  posts  PostList[]
+  createdAt  DateTime @default(now())
+
+  author User   @relation("AuthorLists", fields: [authorId], references: [id])
+}
+
+model PostList {
+  postId Int
+  listId String
+
+  post Post @relation(fields: [postId], references: [id])
+  list List @relation(fields: [listId], references: [id])
+
+  @@id([postId, listId])
+}
+
+model UserSavedList {
+  userId String
+  listId String
+
+  @@id([userId, listId])
 }
 
 model Comment {
@@ -94,7 +127,7 @@ model Reaction {
   userId    String
   postId    Int?
   commentId Int?
-  type      String // like, clap, heart, etc.
+  type      String    @default("like")  // like, clap, heart, etc.
   createdAt DateTime @default(now())
 
   user    User     @relation(fields: [userId], references: [id])
@@ -122,16 +155,18 @@ model Bookmark {
   post Post @relation(fields: [postId], references: [id])
 }
 
-model Draft {
-  id        Int      @id @default(autoincrement())
-  authorId  String
-  title     String?
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model Draft {
+//   id          Int      @id @default(autoincrement())
+//   authorId    String
+//   title       String
+//   description String?
+//   img         String?
+//   content     String?
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
 
-  author User @relation(fields: [authorId], references: [id])
-}
+//   author User @relation(fields: [authorId], references: [id])
+// }
 
 model Session {
   id        String   @id

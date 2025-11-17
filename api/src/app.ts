@@ -4,6 +4,7 @@ import authConfig from "./auth";
 import requireAuth from "./middlewares/auth";
 
 import feedRouter from "./feed";
+import listsRouter from "./lists";
 
 const app = express();
 
@@ -12,9 +13,10 @@ const app = express();
 app.all("/api/auth/*splat", toNodeHandler(authConfig));
 
 // Routes
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get("/", (_, res) => {
+    res.send("Hello World!");
 });
 app.use("/api/feed", feedRouter);
+app.use("/api/lists", listsRouter);
 
 export default app;
