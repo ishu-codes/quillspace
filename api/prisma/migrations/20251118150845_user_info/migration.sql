@@ -36,3 +36,19 @@ CREATE UNIQUE INDEX "UserInfo_userId_key" ON "UserInfo"("userId");
 
 -- AddForeignKey
 ALTER TABLE "UserInfo" ADD CONSTRAINT "UserInfo_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- Trigger function
+CREATE OR REPLACE FUNCTION userinfo_trigger_fn()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO "UserInfo" ("username", "userId", "bio", "role")
+  VALUES (NEW.email, NEW.id, NULL, 'user');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger
+CREATE TRIGGER userinfo_trigger
+AFTER INSERT ON "user"
+FOR EACH ROW
+EXECUTE FUNCTION userinfo_trigger_fn();
