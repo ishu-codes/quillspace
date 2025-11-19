@@ -166,7 +166,7 @@ export default function Home() {
 					{blogs && blogs.length > 0 ? (
 						<>
 							{blogs.map((blog) => (
-								<Link to={`/blogs/${blog.id}`} key={blog.id}>
+								<Link to={`/posts/${blog.id}`} key={blog.id}>
 									<Blog blog={blog} className="w-full" />
 								</Link>
 							))}

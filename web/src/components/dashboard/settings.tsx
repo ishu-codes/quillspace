@@ -272,7 +272,7 @@ export default function Settings() {
 													<Button type="button" variant="outline" size="sm" asChild className="cursor-pointer">
 														<span>
 															<UploadIcon className="mr-2 h-4 w-4" />
-															UploadIcon Image
+															Upload Image
 														</span>
 													</Button>
 												</label>

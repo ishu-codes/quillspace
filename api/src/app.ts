@@ -7,6 +7,7 @@ import cors from "cors";
 import feedRouter from "./feed";
 import draftsRouter from "./drafts";
 import listsRouter from "./lists";
+import postsRouter from "./posts";
 
 const app = express();
 
@@ -41,5 +42,6 @@ app.get("/", (_, res) => {
 app.use("/api/feed", feedRouter);
 app.use("/api/drafts", draftsRouter);
 app.use("/api/lists", listsRouter);
+app.use("/api/posts", postsRouter);
 
 export default app;

@@ -6,6 +6,7 @@ import { AuthLayout, Login, Register, ProtectedLayout, sessionLoader, Logout } f
 import { Home, Library, Profile, Settings, DashboardLayout } from "@/components/dashboard";
 import { Draft, DraftLayout, Drafts } from "@/components/drafts";
 import NotFound from "@/components/NotFound";
+import { PostLayout, Post } from "./components/posts";
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -36,6 +37,12 @@ export const router = createBrowserRouter(
 				<Route path="drafts" element={<DraftLayout />}>
 					<Route index element={<Navigate to="/dashboard/library/drafts" />} />
 					<Route path=":draftId" element={<Draft />} />
+				</Route>
+
+				{/* Posts */}
+				<Route path="posts" element={<PostLayout />}>
+					<Route index element={<Navigate to="/dashboard/home" />} />
+					<Route path=":postId" element={<Post />} />
 				</Route>
 			</Route>
 
