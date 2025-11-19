@@ -1,29 +1,10 @@
-import dotenv from "dotenv";
 import os from "node:os";
-import cors from "cors";
+import dotenv from "dotenv";
+
 import app from "./app";
 
 dotenv.config();
 const PORT = Number(process.env.PORT) || 1337;
-
-// CORS
-const corsOrigins = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
-  : undefined;
-app.use(
-  cors({
-    credentials: true,
-    origin: (origin, callback) => {
-      if (!corsOrigins || !origin || corsOrigins.includes(origin)) {
-        // allow all origins if not specified
-        // allow requests like direct browser visits (no Origin header)
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-  })
-);
 
 // Network URL
 function getLocalIP() {
@@ -51,11 +32,9 @@ app.listen(PORT, "0.0.0.0", () => {
   console.clear();
   console.log("Server running at:");
   console.log(
-    `${color.green("➜")}  ${color.bold("Local:")}    ${color.cyan(localUrl)}`
+    `${color.green("➜")}  ${color.bold("Local:")}    ${color.cyan(localUrl)}`,
   );
   console.log(
-    `${color.green("➜")}  ${color.bold("Network:")}  ${color.cyan(
-      networkUrl
-    )}\n`
+    `${color.green("➜")}  ${color.bold("Network:")}  ${color.cyan(networkUrl)}\n`,
   );
 });

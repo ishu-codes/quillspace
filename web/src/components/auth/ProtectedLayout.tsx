@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLoaderData } from "react-router-dom";
 
 export default function ProtectedLayout() {
-    const authenticated = true;
+  const { session } = useLoaderData();
 
-    if (!authenticated) return <Navigate to="/auth/sign-in" />;
-    return <Outlet />;
+  if (!session) return <Navigate to={"/auth/login"} replace />;
+  return <Outlet />;
 }

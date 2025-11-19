@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { anonymous } from "better-auth/plugins";
+import { anonymous, username } from "better-auth/plugins";
 import { PrismaClient } from "@prisma/client";
 
 import dotenv from "dotenv";
@@ -18,6 +18,7 @@ const authConfig: ReturnType<typeof betterAuth> = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    autoSignIn: true,
   },
 
   //   socialProviders: {
@@ -27,11 +28,12 @@ const authConfig: ReturnType<typeof betterAuth> = betterAuth({
   //       scopes: ["user:email"],
   //     },
   //   },
-  //   plugins: [
-  // 	anonymous({
-  // 		generateName: async () => generateDemoName()
-  // 	})
-  //   ]
+  plugins: [
+    // username(),
+    // anonymous({
+    // 	generateName: async () => generateDemoName()
+    // })
+  ],
 });
 
 export default authConfig;
