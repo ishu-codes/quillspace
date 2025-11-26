@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Blog as BlogType } from "@/types/blog";
+import type { BlogPost } from "@/types/blog";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:1337";
 
 export function useGetPost(postId?: string) {
-	return useQuery<BlogType>({
+	return useQuery<BlogPost>({
 		queryKey: ["post", postId],
 		staleTime: 1000 * 60 * 60, // 1 hr
 		retry: 2,

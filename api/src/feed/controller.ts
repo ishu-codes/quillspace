@@ -7,7 +7,11 @@ async function getFeed(userId: string) {
 	// 	where: { authorId: { in: followingIds } },
 	// 	orderBy: { createdAt: "desc" },
 	// });
-	return db.post.findMany();
+	return db.post.findMany({
+		include: {
+			author: true,
+		},
+	});
 }
 
 export { getFeed };

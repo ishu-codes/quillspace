@@ -9,7 +9,7 @@ export default function DashboardLayout() {
 		<SidebarProvider className="bg-background!">
 			<AppSidebar />
 			<div className="w-full min-h-screen">
-				<Navbar />
+				<Navbar sidebarTrigger={true} />
 
 				<main className="w-full p-4">
 					<Outlet />

@@ -1,4 +1,5 @@
 import { useState, type ForwardRefExoticComponent, type RefAttributes } from "react";
+import { useNavigate } from "react-router-dom";
 import {
 	SaveIcon,
 	UploadIcon,
@@ -36,6 +37,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/authClient";
 
 interface UserSettings {
 	name: string;
@@ -185,8 +187,15 @@ export default function Settings() {
 	};
 
 	const handleUpdate = (key: string) => {
-		console.log(`Action ${key} initiated!`);
+		// console.log(`Action ${key} initiated!`);
+		switch (key) {
+      case 'logout':
+        handleLogout();
+        break;
+		}
 	};
+
+  const navigate = useNavigate();
 
 	const [editedSettings, setEditedSettings] = useState<UserSettings>(userSettings);
 
@@ -222,6 +231,11 @@ export default function Settings() {
 		setEditedSettings(userSettings);
 		setPreviewImage(null);
 	};
+
+	const handleLogout = async () => {
+    await authClient.signOut();
+    navigate("/auth/login");
+  };
 
 	return (
 		<div className="h-full py-8">

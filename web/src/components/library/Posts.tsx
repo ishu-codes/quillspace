@@ -1,17 +1,11 @@
-// import type { Blog as BlogType } from "@/types/blog";
-import Blog from "@/components/common/Blog";
-import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useSidebar } from "@/components/ui/sidebar";
-// import { useEffect, useState } from "react";
-import { useGetFeed } from "@/fetchers/feed";
+import { usePosts } from "@/fetchers/library";
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import Blog from "../common/Blog";
 
-export default function Home() {
-  const { open } = useSidebar();
-  // const [blogs, setBlogs] = useState([]);
-  const { data: blogs, isLoading } = useGetFeed();
-
+export default function Posts({postType}:{postType:  "draft" | "published" | "archived"}) {
+  const { data: blogs, isLoading } = usePosts(postType);
   return (
     <div
       className={cn(

@@ -3,47 +3,70 @@ import { useParams } from "react-router-dom";
 import { useGetPost } from "@/fetchers/post";
 import { Skeleton } from "../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import RenderMarkdown from "@/components/common/RenderMarkdown";
 
 export default function Post() {
-	const { postId } = useParams();
-	const { data: post, isLoading } = useGetPost(postId);
-	return (
-		<div className="w-full flex flex-col p-4">
-			<div className="w-full md:max-w-6xl flex flex-col gap-4 mx-auto">
-				{isLoading ? (
-					<>
-						<Skeleton className="w-full h-80 rounded-lg" />
-						<Skeleton className="w-4/5 h-20" />
-						<Skeleton className="w-full h-18" />
-					</>
-				) : (
-					<>
-						{post ? (
-							<>
-								<picture className="w-full h-80 bg-muted rounded-lg overflow-hidden">
-									<img className="w-full h-full" src={post?.img} alt="featured-image" />
-								</picture>
+  const { postId } = useParams();
+  const { data: post, isLoading } = useGetPost(postId);
+  return (
+    <div className="w-full flex justify-between p-4">
+      <div className="w-full md:max-w-4xl flex flex-col gap-8 mx-auto pt-12">
+        {isLoading ? (
+          <>
+            <Skeleton className="w-4/5 h-20" />
+            <Skeleton className="w-full h-18" />
+            <Skeleton className="w-full h-80 rounded-lg" />
+          </>
+        ) : (
+          <>
+            {!post ? (
+              <div>No data</div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-4xl font-semibold">{post.title}</h2>
+                  <p className="text-xl text-muted-foreground">{post.desc}</p>
+                </div>
 
-								<h2 className="text-2xl font-semibold">{post.title}</h2>
-								<p>{post.desc}</p>
+                <div className="flex gap-4">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={post?.author?.image} alt="author-image" />
+                    <AvatarFallback className="border-2 text-xl">{post?.author?.name.charAt(0) ?? "A"}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <h4 className="">{post.author?.name}</h4>
+                    <p className="text-sm text-muted-foreground">{post.author?.id}</p>
+                  </div>
+                </div>
 
-								<div className="flex gap-4">
-									<Avatar className="w-12 h-12">
-										<AvatarImage src={post?.author?.img} alt="author-image" />
-										<AvatarFallback className="border-2 text-xl">{post?.author?.name.charAt(0) ?? "A"}</AvatarFallback>
-									</Avatar>
-									<div className="flex flex-col">
-										<h4 className="text-xl">{post.author?.name}</h4>
-										<p className="text-sm text-muted-foreground">{post.author?.id}</p>
-									</div>
-								</div>
-							</>
-						) : (
-							<div>No data</div>
-						)}
-					</>
-				)}
-			</div>
-		</div>
-	);
+                <picture className="w-full h-120 overflow-hidden">
+                  <img className="h-full mx-auto rounded-lg" src={post?.featuredImg} alt="featured-image" />
+                </picture>
+
+                <div className="flex-1 overflow-auto rounded-lg">
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <RenderMarkdown content={post.content} />
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
+      <div className="w-80 bg-amber-400">
+        <div className="flex flex-col sticky top-20">
+          <h4 className="text-2xl">Contents</h4>
+          {[
+            { title: "Title 1", url: "#title-1" },
+            { title: "Title 2", url: "#title-2" },
+            { title: "Title 3", url: "#title-4" },
+          ].map((content) => (
+            <a href={content.url} key={content.title}>
+              {content.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

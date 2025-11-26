@@ -8,6 +8,7 @@ import feedRouter from "./feed";
 import draftsRouter from "./drafts";
 import listsRouter from "./lists";
 import postsRouter from "./posts";
+import libraryRouter from "./library";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(
 		},
 	}),
 );
+// app.use(cors());
 
 app.use(express.json());
 
@@ -43,5 +45,6 @@ app.use("/api/feed", feedRouter);
 app.use("/api/drafts", draftsRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/library", libraryRouter);
 
 export default app;

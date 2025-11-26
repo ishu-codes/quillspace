@@ -11,8 +11,8 @@ router.post("/", async (req, res) => {
 
 		const userId = session.user.id;
 
-		const { title, desc } = req.body;
-		const feed = await createDraft(userId, title, desc);
+		const { title, desc, featuredImg, slug } = req.body;
+		const feed = await createDraft(userId, title, desc, featuredImg, slug);
 
 		console.log(`[${new Date().toLocaleTimeString()}]: User name: ${session.user.name}`);
 		return res.json(feed).sendStatus(201);
