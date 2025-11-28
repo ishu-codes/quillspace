@@ -1,5 +1,5 @@
+import Posts from "./Posts";
+
 export default function Bookmarked() {
-  return (
-    <div className="">Bookmarked</div>
-  )
+  return <Posts postType="bookmarked" />;
 }

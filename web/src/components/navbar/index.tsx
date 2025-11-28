@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import {
@@ -76,14 +76,14 @@ export default function Navbar({ sidebarTrigger = false }: Props) {
   return (
     <div className="w-full h-16 flex items-center justify-between p-4 border-b sticky top-0 backdrop-blur-lg z-50">
       {sidebarTrigger ? (
-        <SidebarTrigger variant={"ghost"} />
+        <SidebarTriggerWithLogo />
       ) : (
         <div className="flex gap-2">
           <Button variant={"ghost"} onClick={() => navigate(-1)}>
             <ArrowLeftIcon />
           </Button>
 
-          <Link to="/">
+          <Link to="/" className="hidden md:block">
             <Logo />
           </Link>
         </div>
@@ -215,18 +215,31 @@ export default function Navbar({ sidebarTrigger = false }: Props) {
               </div>
               <div className="flex gap-2 justify-between">
                 <Button variant={"outline"} asChild>
-                  <Link to={"/auth/logout"}>View Profile</Link>
+                  <Link to={"/dashboard/profile"}>View Profile</Link>
                 </Button>
                 <Button variant={"outline"} className="text-destructive hover:text-destructive" onClick={handleLogout}>
-                  {/*<a href={"/auth/logout"}>*/}
                   Logout
-                  {/*</a>*/}
                 </Button>
               </div>
             </div>
           </PopoverContent>
         </Popover>
       </div>
+    </div>
+  );
+}
+
+function SidebarTriggerWithLogo() {
+  const { open: isSidebarOpen } = useSidebar();
+
+  return (
+    <div className="flex gap-2">
+      <SidebarTrigger variant={"ghost"} />
+      {!isSidebarOpen && (
+        <Link className="hidden md:block" to="/">
+          <Logo />
+        </Link>
+      )}
     </div>
   );
 }

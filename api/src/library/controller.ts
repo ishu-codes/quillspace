@@ -1,4 +1,5 @@
 import { db } from "../database";
+import { PostType } from "../types/post";
 
 export async function getYourLists(userId: string) {
   const [publishedPostsCount, draftsCount, bookmarkedCount, yourLists] = await Promise.all([
@@ -37,7 +38,25 @@ export async function getYourLists(userId: string) {
   };
 }
 
-export async function getPosts(userId: string, postType: "draft" | "published" | "archived") {
+export async function getPosts(userId: string, postType: PostType) {
+  if (postType === "bookmarked") {
+    const bookmarkedPosts = (
+      await db.bookmark.findMany({
+        where: {
+          userId,
+        },
+      })
+    ).map((b) => b.postId);
+
+    return await db.post.findMany({
+      where: {
+        id: {
+          in: bookmarkedPosts,
+        },
+      },
+    });
+  }
+
   return await db.post.findMany({
     where: {
       authorId: userId,

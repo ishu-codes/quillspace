@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import Blog from "../common/Blog";
 
-export default function Posts({postType}:{postType:  "draft" | "published" | "archived"}) {
+export default function Posts({ postType }: { postType: "draft" | "published" | "archived" | "bookmarked" }) {
   const { data: blogs, isLoading } = usePosts(postType);
   return (
     <div
       className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-3 p-4",
+        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-y-3 p-4",
         !open && "md:grid-cols-3 lg:grid-cols-5",
       )}
     >

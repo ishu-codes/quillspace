@@ -1,21 +1,19 @@
-// import type { Blog as BlogType } from "@/types/blog";
-import Blog from "@/components/common/Blog";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+
+import Blog from "@/components/common/Blog";
 import { useSidebar } from "@/components/ui/sidebar";
-// import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useGetFeed } from "@/fetchers/feed";
-import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const { open } = useSidebar();
-  // const [blogs, setBlogs] = useState([]);
   const { data: blogs, isLoading } = useGetFeed();
 
   return (
     <div
       className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-3 p-4",
+        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-3 md:p-4",
         !open && "md:grid-cols-3 lg:grid-cols-5",
       )}
     >

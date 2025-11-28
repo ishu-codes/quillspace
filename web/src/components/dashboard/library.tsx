@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { BlogListItem } from "@/types/blog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { GlobeIcon, LockIcon } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import Blog from "../common/Blog";
+import { GlobeIcon, LockIcon } from "lucide-react";
+
+import Blog from "@/components/common/Blog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import { useYourLists } from "@/fetchers/library";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import type { BlogListItem } from "@/types/blog";
 
 const LISTS = {
   yourLists: [
@@ -123,10 +124,10 @@ export default function Library() {
   ];
 
   return (
-    <div className="h-full py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="h-full md:py-8">
+      <div className="max-w-4xl mx-auto md:px-4">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-4 md:mb-8">
           <h1 className="text-3xl font-bold">Library</h1>
           <p className="text-muted-foreground mt-2">
             Manage your drafts, posts, saved and created lists, and much more.
@@ -142,18 +143,18 @@ export default function Library() {
           </TabsList>
 
           <TabsContent value="yourLists">
-            <div className="w-full grid grid-cols-3 gap-4">
+            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
               <BlogsList list={predefinedLists} routeSuffix="/library" currentUser={true} />
               <BlogsList list={yourLists?.list ?? []} currentUser={true} />
             </div>
           </TabsContent>
           <TabsContent value="savedLists">
-            <div className="w-full grid grid-cols-3 gap-4">
+            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
               <BlogsList list={LISTS.savedLists} />
             </div>
           </TabsContent>
           <TabsContent value="readingHistory">
-            <div className="grid grid-cols-3 gap-4 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
               {LISTS.readingHistory.map((blog) => (
                 <Link to={`/posts/${blog.id}`} key={blog.id}>
                   <Blog blog={blog} className="w-full" />

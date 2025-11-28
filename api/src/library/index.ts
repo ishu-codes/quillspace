@@ -1,6 +1,8 @@
 import { Router } from "express";
+
 import { getYourLists, getPosts } from "./controller";
 import authConfig from "../auth";
+import { PostType } from "../types/post";
 
 const router = Router();
 
@@ -25,7 +27,7 @@ router.get("/posts/:postType", async (req, res) => {
     const userId = session.user.id;
     const { postType } = req.params;
 
-    return res.json(await getPosts(userId, postType as "draft" | "published" | "archived"));
+    return res.json(await getPosts(userId, postType as PostType));
   } catch (e) {
     return res.send({
       message: `Error to find user! ${e}`,

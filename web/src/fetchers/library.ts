@@ -31,9 +31,9 @@ export function useYourLists() {
   });
 }
 
-export function usePosts(postType: "draft" | "published" | "archived") {
+export function usePosts(postType: "draft" | "published" | "archived" | "bookmarked") {
   return useQuery<Blog[]>({
-    queryKey: ["published-posts", postType],
+    queryKey: ["posts", postType],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
     queryFn: async () => {
