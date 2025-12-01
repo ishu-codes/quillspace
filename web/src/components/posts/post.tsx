@@ -4,6 +4,8 @@ import { useGetPost } from "@/fetchers/post";
 import { Skeleton } from "../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import RenderMarkdown from "@/components/common/RenderMarkdown";
+import { AsideContents } from "../common/AsideContents";
+import { extractHeadings } from "@/lib/contents";
 
 export default function Post() {
   const { postId } = useParams();
@@ -53,7 +55,7 @@ export default function Post() {
           </>
         )}
       </div>
-      <div className="w-80 bg-amber-400">
+      {/*<div className="w-80 bg-amber-400">
         <div className="flex flex-col sticky top-20">
           <h4 className="text-2xl">Contents</h4>
           {[
@@ -66,7 +68,8 @@ export default function Post() {
             </a>
           ))}
         </div>
-      </div>
+      </div>*/}
+      <AsideContents headings={extractHeadings(post?.content ?? "")} />
     </div>
   );
 }
