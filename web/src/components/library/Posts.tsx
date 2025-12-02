@@ -4,7 +4,13 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import Blog from "../common/Blog";
 
-export default function Posts({ postType }: { postType: "draft" | "published" | "archived" | "bookmarked" }) {
+export default function Posts({
+  postType,
+  prefixUrl = "/posts",
+}: {
+  postType: "draft" | "published" | "archived" | "bookmarked";
+  prefixUrl?: string;
+}) {
   const { data: blogs, isLoading } = usePosts(postType);
   return (
     <div
@@ -26,7 +32,7 @@ export default function Posts({ postType }: { postType: "draft" | "published" | 
           {blogs && blogs.length > 0 ? (
             <>
               {blogs.map((blog) => (
-                <Link to={`/posts/${blog.id}`} key={blog.id}>
+                <Link to={`${prefixUrl}/${blog.id}`} key={blog.id}>
                   <Blog blog={blog} className="w-full" />
                 </Link>
               ))}

@@ -1,270 +1,160 @@
 import { useState } from "react";
+// import { MapPin, Calendar, Link as LinkIcon, MessageCircle } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
+// import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Calendar, Link as LinkIcon, MessageCircle } from "lucide-react";
-
-interface UserProfile {
-    id: string;
-    name: string;
-    handle: string;
-    bio: string;
-    avatar: string;
-    coverImage?: string;
-    location?: string;
-    website?: string;
-    joinDate: string;
-    followers: number;
-    following: number;
-    blogs: number;
-}
-
-interface Blog {
-    id: string;
-    title: string;
-    excerpt: string;
-    publishedAt: string;
-}
-
-const mockUser: UserProfile = {
-    id: "1",
-    name: "Sarah Anderson",
-    handle: "@sarahdev",
-    bio: "Full-stack developer, writer, and coffee enthusiast. Sharing thoughts on web development, design, and tech.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-    coverImage: "https://images.unsplash.com/photo-1557672172-298e090d0f80?w=1200&h=300&fit=crop",
-    location: "San Francisco, CA",
-    website: "https://sarahdev.com",
-    joinDate: "January 2023",
-    followers: 2345,
-    following: 543,
-    blogs: 28,
-};
-
-const mockBlogs: Blog[] = [
-    {
-        id: "1",
-        title: "Getting Started with React Hooks",
-        excerpt:
-            "Learn how to use React Hooks to manage state and side effects in your functional components...",
-        publishedAt: "2 days ago",
-    },
-    {
-        id: "2",
-        title: "TypeScript Best Practices",
-        excerpt:
-            "Explore the best practices for writing type-safe code with TypeScript in production applications...",
-        publishedAt: "1 week ago",
-    },
-    {
-        id: "3",
-        title: "Building Scalable APIs",
-        excerpt:
-            "Deep dive into architectural patterns for building APIs that can scale with your growing user base...",
-        publishedAt: "2 weeks ago",
-    },
-];
+import { useAuthSession } from "@/hooks/useAuthSession";
+import { useNavigate } from "react-router-dom";
+import type { User } from "@/types/blog";
 
 export default function Profile() {
-    const [isFollowing, setIsFollowing] = useState(false);
+  const { session } = useAuthSession();
+  const [currentTab, setCurrentTab] = useState("profile");
 
-    const handleFollowClick = () => {
-        setIsFollowing(!isFollowing);
-    };
+  const navigate = useNavigate();
 
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Cover Image */}
-            {mockUser.coverImage && (
-                <div className="h-48 w-full overflow-hidden bg-gradient-to-r from-blue-500 to-purple-500">
-                    <img
-                        src={mockUser.coverImage}
-                        alt="Cover"
-                        className="h-full w-full object-cover"
-                    />
-                </div>
-            )}
-
-            {/* Profile Header */}
-            <div className="px-6 pb-6">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end md:gap-6">
-                    {/* Avatar */}
-                    <div className="-mt-20 flex items-end gap-4">
-                        <Avatar className="h-32 w-32 border-4 border-background">
-                            <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-                            <AvatarFallback>{mockUser.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                    </div>
-
-                    {/* Profile Info Header */}
-                    <div className="flex-1">
-                        <h1 className="text-3xl font-bold">{mockUser.name}</h1>
-                        <p className="text-muted-foreground">{mockUser.handle}</p>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                            <MessageCircle className="mr-2 h-4 w-4" />
-                            Message
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant={isFollowing ? "outline" : "default"}
-                            onClick={handleFollowClick}
-                        >
-                            {isFollowing ? "Following" : "Follow"}
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Bio Section */}
-                <div className="mt-6 space-y-4">
-                    <p className="text-base text-foreground">{mockUser.bio}</p>
-
-                    {/* Meta Information */}
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                        {mockUser.location && (
-                            <div className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                <span>{mockUser.location}</span>
-                            </div>
-                        )}
-                        {mockUser.website && (
-                            <div className="flex items-center gap-1">
-                                <LinkIcon className="h-4 w-4" />
-                                <a
-                                    href={mockUser.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 hover:underline"
-                                >
-                                    {mockUser.website.replace("https://", "")}
-                                </a>
-                            </div>
-                        )}
-                        <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>Joined {mockUser.joinDate}</span>
-                        </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="flex gap-6 pt-4">
-                        <div className="flex items-center gap-2">
-                            <span className="font-semibold">{mockUser.following}</span>
-                            <span className="text-muted-foreground">Following</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="font-semibold">{mockUser.followers}</span>
-                            <span className="text-muted-foreground">Followers</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="font-semibold">{mockUser.blogs}</span>
-                            <span className="text-muted-foreground">Blogs</span>
-                        </div>
-                    </div>
-                </div>
-
-                <Separator className="my-6" />
-
-                {/* Tabs Section */}
-                <Tabs defaultValue="blogs" className="w-full">
-                    <TabsList>
-                        <TabsTrigger value="blogs">Blogs</TabsTrigger>
-                        <TabsTrigger value="followers">Followers</TabsTrigger>
-                        <TabsTrigger value="following">Following</TabsTrigger>
-                    </TabsList>
-
-                    {/* Blogs Tab */}
-                    <TabsContent value="blogs" className="mt-6 space-y-4">
-                        {mockBlogs.map((blog) => (
-                            <Card
-                                key={blog.id}
-                                className="cursor-pointer transition-colors hover:bg-accent"
-                            >
-                                <CardHeader>
-                                    <CardTitle className="text-lg">{blog.title}</CardTitle>
-                                    <CardDescription>{blog.publishedAt}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground">{blog.excerpt}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </TabsContent>
-
-                    {/* Followers Tab */}
-                    <TabsContent value="followers" className="mt-6">
-                        <div className="space-y-4">
-                            {[1, 2, 3, 4].map((item) => (
-                                <Card key={item}>
-                                    <CardContent className="pt-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <Avatar>
-                                                    <AvatarImage
-                                                        src={`https://images.unsplash.com/photo-1${
-                                                            500000000 + item
-                                                        }?w=100&h=100&fit=crop`}
-                                                    />
-                                                    <AvatarFallback>U{item}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-semibold">Follower {item}</p>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        @follower{item}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <Button variant="outline" size="sm">
-                                                Follow Back
-                                            </Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </TabsContent>
-
-                    {/* Following Tab */}
-                    <TabsContent value="following" className="mt-6">
-                        <div className="space-y-4">
-                            {[1, 2, 3].map((item) => (
-                                <Card key={item}>
-                                    <CardContent className="pt-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <Avatar>
-                                                    <AvatarImage
-                                                        src={`https://images.unsplash.com/photo-1${
-                                                            600000000 + item
-                                                        }?w=100&h=100&fit=crop`}
-                                                    />
-                                                    <AvatarFallback>U{item}</AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <p className="font-semibold">
-                                                        User Following {item}
-                                                    </p>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        @user{item}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <Button variant="outline" size="sm">
-                                                Unfollow
-                                            </Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </TabsContent>
-                </Tabs>
-            </div>
+  return (
+    <div className="h-full py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Profile</h1>
+          <p className="text-muted-foreground mt-2">View your profile status.</p>
         </div>
-    );
+
+        {/* Tabs */}
+        <Tabs className="w-full" value={currentTab} onValueChange={(val) => setCurrentTab(val)}>
+          <TabsList className="w-full flex justify-between md:grid md:grid-cols-3">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="followers">Followers</TabsTrigger>
+            <TabsTrigger value="following">Following</TabsTrigger>
+          </TabsList>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-4">
+            <Card>
+              {/*<CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+                <CardDescription>Update your profile details and personal information</CardDescription>
+              </CardHeader>*/}
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-4">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={session?.user.image || ""} alt={"profile"} />
+                      <AvatarFallback>{session?.user.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+
+                    <div className="flex flex-col">
+                      <div className="flex flex-col">
+                        <h3 className="text-xl font-semibold">{session?.user.name}</h3>
+                        <p className="text-muted-foreground text-sm">@Username</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bio */}
+                  <div className="text-muted-foreground">
+                    <p>Bio</p>
+                    <p>Bio2</p>
+                    <p>Bio3</p>
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { title: "Posts", value: 2, action: () => navigate("/library/posts") },
+                    { title: "Followers", value: 8, action: () => setCurrentTab("followers") },
+                    { title: "Following", value: 10, action: () => setCurrentTab("following") },
+                  ].map((item) => (
+                    <Button
+                      variant={"ghost"}
+                      className="h-20! flex flex-col gap-1"
+                      onClick={item.action}
+                      key={item.title}
+                    >
+                      <p className="text-muted-foreground">{item.title}</p>
+                      <h4 className="text-xl font-semibold">{item.value}</h4>
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Followers Tab */}
+          <TabsContent value="followers" className="space-y-4">
+            <Card>
+              {/*<CardHeader>
+                <CardTitle>Theme</CardTitle>
+                <CardDescription>Choose your preferred theme appearance</CardDescription>
+              </CardHeader>*/}
+              <CardContent className="flex flex-col gap-4">
+                {[
+                  { id: "1", name: "ABC", image: "" },
+                  { id: "2", name: "DEF", image: "" },
+                ].map((item) => (
+                  <FollowerCard user={item} type="follower" key={item.id} />
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Following Tab */}
+          <TabsContent value="following" className="space-y-4">
+            <Card>
+              {/*<CardHeader>
+                <CardTitle>Theme</CardTitle>
+                <CardDescription>Choose your preferred theme appearance</CardDescription>
+              </CardHeader>*/}
+              <CardContent className="flex flex-col gap-4">
+                {[
+                  { id: "1", name: "ABC", image: "" },
+                  { id: "2", name: "DEF", image: "" },
+                ].map((item) => (
+                  <FollowerCard user={item} type="following" key={item.id} />
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}
+
+interface FollowerCardProps {
+  user: User;
+  type: "follower" | "following";
+}
+function FollowerCard({ user, type }: FollowerCardProps) {
+  return (
+    <div className="flex justify-between items-center">
+      <div className="flex gap-4">
+        <Avatar className="h-10 w-10">
+          <AvatarImage src={user.image || ""} alt={"profile"} />
+          <AvatarFallback className="border-1">{user.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+
+        <div className="flex flex-col">
+          <div className="flex flex-col">
+            <h3 className="font-semibold">{user.name}</h3>
+            <p className="text-muted-foreground text-sm -mt-1">@Username</p>
+          </div>
+        </div>
+      </div>
+
+      {type === "follower" ? (
+        <Button size={"sm"}>Follow</Button>
+      ) : (
+        <Button size={"sm"} variant={"outline"}>
+          Unfollow
+        </Button>
+      )}
+    </div>
+  );
 }
