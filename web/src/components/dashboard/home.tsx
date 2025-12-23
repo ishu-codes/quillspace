@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import Blog from "@/components/common/Blog";
+import Blog from "@/components/common/PostCard";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetFeed } from "@/fetchers/feed";

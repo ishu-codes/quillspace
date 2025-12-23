@@ -1,7 +1,18 @@
+import type { Post } from "@prisma/client";
+
 import { db } from "../database";
 
 function generateSlug(title: string) {
   return title.replace(" ", "-");
+}
+
+export async function getPostById(postId: string, userId: string) {
+  return await db.post.findUnique({
+    where: {
+      id: parseInt(postId),
+      authorId: userId,
+    },
+  });
 }
 
 export async function createDraft(userId: string, title: string, desc: string | null = null) {
@@ -25,23 +36,26 @@ export async function updateDraft(
   featuredImg: string | null = null,
   // slug: string | null = null,
   content: string | null,
-) {
-  const defaultPost = await db.post.findUnique({
-    where: {
-      id: parseInt(postId),
-    },
-  });
-  return await db.post.update({
-    data: {
-      title: title ?? defaultPost?.title ?? "",
-      desc: desc ?? defaultPost?.desc ?? "",
-      content: content ?? defaultPost?.content ?? "",
-      featuredImg: featuredImg ?? defaultPost?.featuredImg ?? "",
-      // slug: slug ?? defaultPost?.slug ?? generateSlug(title ?? "no-slug"),
-    },
-    where: {
-      id: parseInt(postId),
-      authorId: userId,
-    },
-  });
+): Promise<Post | false> {
+  const id = Number(postId);
+  if (!Number.isInteger(id)) return false;
+
+  try {
+    return await db.post.update({
+      where: {
+        id: parseInt(postId),
+        authorId: userId,
+      },
+      data: {
+        ...(title !== null && { title }),
+        ...(desc !== null && { desc }),
+        ...(content !== null && { content }),
+        ...(featuredImg !== null && { featuredImg }),
+        // ...(slug !== null && { slug },
+        // slug: slug ?? defaultPost?.slug ?? generateSlug(title ?? "no-slug"),
+      },
+    });
+  } catch {
+    return false;
+  }
 }

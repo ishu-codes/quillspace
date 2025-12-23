@@ -1,8 +1,9 @@
-import { usePosts } from "@/fetchers/library";
-import { Skeleton } from "../ui/skeleton";
-import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import Blog from "../common/Blog";
+
+import PostCard from "@/components/common/PostCard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { usePosts } from "@/fetchers/library";
+import { cn } from "@/lib/utils";
 
 export default function Posts({
   postType,
@@ -33,7 +34,7 @@ export default function Posts({
             <>
               {blogs.map((blog) => (
                 <Link to={`${prefixUrl}/${blog.id}`} key={blog.id}>
-                  <Blog blog={blog} className="w-full" />
+                  <PostCard blog={blog} className="w-full" type={postType === "draft" ? "draft" : "post"} />
                 </Link>
               ))}
             </>

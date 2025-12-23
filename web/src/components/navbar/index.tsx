@@ -83,9 +83,7 @@ export default function Navbar({ sidebarTrigger = false }: Props) {
             <ArrowLeftIcon />
           </Button>
 
-          <Link to="/" className="hidden md:block">
-            <Logo />
-          </Link>
+          <Logo />
         </div>
       )}
       {/* <Link to="/">QullSpace</Link> */}

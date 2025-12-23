@@ -16,7 +16,8 @@ export function useGetFeed() {
       });
       if (!res.ok) throw new Error("Not authenticated!");
 
-      const data = await res.json();
+      const response = await res.json();
+      const data = response.data;
       if (!Array.isArray(data)) {
         console.warn("Invalid feed response");
         return [];

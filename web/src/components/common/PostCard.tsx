@@ -6,13 +6,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getRelativeTime } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
 import type { Blog as BlogType } from "@/types/blog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   blog: BlogType;
   className?: string;
+  type?: "post" | "draft";
 }
 
-export default function Blog({ blog, className = "" }: Props) {
+export default function PostCard({ blog, className = "", type = "post" }: Props) {
   const handleToggleLike = () => {};
   const handleToggleBookmark = () => {};
 
@@ -26,32 +28,40 @@ export default function Blog({ blog, className = "" }: Props) {
       {/* Thumbnail */}
       <picture className="w-full h-40 relative rounded-lg overflow-hidden">
         <div className="absolute w-full h-full bg-black opacity-0 dark:opacity-15" />
-        <img className="w-full h-full" src={blog?.featuredImg} alt={blog?.title} />
+        {blog?.featuredImg ? (
+          <img className="w-full h-full" src={blog?.featuredImg} alt={blog?.title} />
+        ) : (
+          <Skeleton className="w-full h-full" />
+        )}
       </picture>
 
       {/* Author + Core info */}
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">{blog?.title}</h3>
 
-        <div className="flex items-center gap-2">
-          <Avatar className="w-9 h-9">
-            <AvatarImage src={blog?.author?.image} alt={blog?.author?.name} />
-            <AvatarFallback>{blog?.author?.name.charAt(0)}</AvatarFallback>
-          </Avatar>
+        {type === "post" ? (
+          <div className="flex items-center gap-2">
+            <Avatar className="w-9 h-9">
+              <AvatarImage src={blog?.author?.image} alt={blog?.author?.name} />
+              <AvatarFallback>{blog?.author?.name.charAt(0)}</AvatarFallback>
+            </Avatar>
 
-          <div className="flex flex-col text-sm text-muted-foreground">
-            <p className="">{blog?.author?.name}</p>
-            <p className="flex gap-2">
-              <span>{blog?.likes ?? 0} likes</span>
-              {blog.published && (
-                <>
-                  <span>&bull;</span>
-                  <span>{getRelativeTime(blog?.published)}</span>
-                </>
-              )}
-            </p>
+            <div className="flex flex-col text-sm text-muted-foreground">
+              <p className="">{blog?.author?.name}</p>
+              <p className="flex gap-2">
+                <span>{blog?.likes ?? 0} likes</span>
+                {blog.published && (
+                  <>
+                    <span>&bull;</span>
+                    <span>{getRelativeTime(blog?.published)}</span>
+                  </>
+                )}
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">{blog.desc.slice(0, 50)}...</p>
+        )}
       </div>
 
       {/* Author */}

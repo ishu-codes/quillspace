@@ -27,21 +27,9 @@ export function AsideContents({ headings }: SidebarProps) {
   }, [headings]);
 
   return (
-    <aside className="w-64 pr-4 sticky top-30 h-screen overflow-auto">
+    <aside className="w-full md:w-80 h-full flex flex-col gap-4 pr-4 sticky top-30 overflow-auto">
       <h4 className="text-xl font-semibold">Contents</h4>
-      <nav className="space-y-2">
-        {headings.map((h) => (
-          <a
-            key={h.id}
-            href={`#${h.id}`}
-            className={`block transition-all duration-200 ${
-              activeId === h.id ? "font-bold text-primary translate-x-1" : "text-muted-foreground hover:text-primary"
-            } ${h.level === 2 ? "ml-4" : ""}`}
-          >
-            {h.text}
-          </a>
-        ))}
-      </nav>
+      <aside className="toc w-80 sticky top-24 hidden lg:block" />
     </aside>
   );
 }

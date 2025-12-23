@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { anonymous, username } from "better-auth/plugins";
+// import { anonymous, username } from "better-auth/plugins";
 import { PrismaClient } from "@prisma/client";
 
 import dotenv from "dotenv";

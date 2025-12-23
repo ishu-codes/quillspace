@@ -137,6 +137,29 @@
         pointer-events: none;
     }
 
+    .toc {
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .toc a {
+        display: block;
+        padding: 4px 8px;
+        color: var(--muted-foreground);
+        border-left: 2px solid transparent;
+        text-decoration: none;
+    }
+
+    .toc a:hover {
+        color: var(--foreground);
+    }
+
+    .toc .is-active-link {
+        color: hsl(var(--primary));
+        font-weight: 600;
+        border-left-color: var(--primary);
+    }
+
     /*.prose {
         --tw-prose-body: color-mix(in oklab, var(--color-fd-foreground) 85%, transparent);
         --tw-prose-headings: color-mix(in oklab, var(--color-fd-foreground) 85%, transparent);

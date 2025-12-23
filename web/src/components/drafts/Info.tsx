@@ -14,14 +14,14 @@ export default function Info({ post, handlePostChange, handleImageUpload }: Prop
   return (
     <div className="pt-8 px-2">
       <div className="mb-4 relative">
-        {post.headerImage ? (
+        {post?.featuredImg ? (
           <div className="relative w-full h-48 rounded-lg overflow-hidden bg-muted">
-            <img src={post.headerImage} alt="Blog header" className="w-full h-full object-cover" />
+            <img src={post.featuredImg} alt="Blog header" className="w-full h-full object-cover" />
             <Button
               variant="secondary"
               size="sm"
               className="absolute top-2 right-2"
-              onClick={() => handlePostChange("headerImage", "")}
+              onClick={() => handlePostChange("featuredImg", "")}
             >
               Remove
             </Button>
@@ -39,13 +39,13 @@ export default function Info({ post, handlePostChange, handleImageUpload }: Prop
       <div className="space-y-3 mb-4">
         <Input
           placeholder="Blog Title"
-          value={post.title}
+          value={post?.title}
           onChange={(e) => handlePostChange("title", e.target.value)}
           className="text-lg font-semibold"
         />
         <Input
           placeholder="Short description (SEO meta)"
-          value={post.desc}
+          value={post?.desc}
           onChange={(e) => handlePostChange("desc", e.target.value)}
           className="text-sm"
         />

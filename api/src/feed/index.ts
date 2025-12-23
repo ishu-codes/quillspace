@@ -1,24 +1,24 @@
-import { Router } from "express";
+import { Router, type Response } from "express";
+
+import { asyncHandler } from "../config/handler";
+import { success } from "../config/response";
 import { getFeed } from "./controller";
-import authConfig from "../auth";
+import { requireAuth, type AuthRequest } from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-	try {
-		const session = await authConfig.api.getSession({ headers: req.headers });
-		if (!session) return res.status(401).json({ error: "Unauthorized" });
+router.get(
+  "/",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
 
-		const userId = session.user.id;
-		const feed = await getFeed(userId);
+    const feed = await getFeed(userId);
 
-		console.log(`User name: ${session.user.name}`);
-		return res.json(feed);
-	} catch (e) {
-		return res.send({
-			message: `Error to find user! ${e}`,
-		});
-	}
-});
+    console.log(`/feed  ${session.user.name}`);
+    return success(res, 200, feed);
+  }),
+);
 
 export default router;

@@ -7,7 +7,7 @@ import RenderMarkdown from "@/components/common/RenderMarkdown";
 import { AsideContents } from "../common/AsideContents";
 import { extractHeadings } from "@/lib/contents";
 
-export default function Post() {
+export default function PostPage() {
   const { postId } = useParams();
   const { data: post, isLoading } = useGetPost(postId);
   return (

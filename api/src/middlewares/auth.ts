@@ -1,27 +1,23 @@
 import type { Request, Response, NextFunction } from "express";
-import authConfig from "../auth";
-// import { db } from "../../database";
 
-export default async function requireAuth(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+import authConfig from "../auth";
+import { failure } from "../config/response";
+import type { AuthSession } from "../types/auth";
+
+export interface AuthRequest extends Request {
+  authSession?: AuthSession;
+}
+
+export async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
   try {
     const session = await authConfig.api.getSession({ headers: req.headers });
-
-    // Attach to request object for later use
-    (req as any).user = session?.user || null;
-    (req as any).session = session?.session || null;
-    (req as any).userId = session?.user?.id || "";
-
-    if (!session?.user) {
-      return res.status(401).json({ message: "Unauthorized" });
+    if (!session?.user || !session.session) {
+      return failure(res, 401, "Unauthorized");
     }
 
-    next();
-  } catch (error) {
-    console.error("Auth middleware error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    req.authSession = session;
+    return next();
+  } catch (err) {
+    return failure(res, 500, `${err}`);
   }
 }

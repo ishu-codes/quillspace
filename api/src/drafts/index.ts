@@ -1,46 +1,60 @@
-import { Router } from "express";
-import { createDraft, updateDraft } from "./controller";
-import authConfig from "../auth";
+import { Router, type Response } from "express";
+
+import { asyncHandler } from "../config/handler";
+import { failure, success } from "../config/response";
+import { createDraft, getPostById, updateDraft } from "./controller";
+import { requireAuth, type AuthRequest } from "../middlewares/auth";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const session = await authConfig.api.getSession({ headers: req.headers });
-    if (!session) return res.status(401).json({ error: "Unauthorized" });
-
+router.post(
+  "/",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
     const userId = session.user.id;
 
     const { title, desc } = req.body;
-    const feed = await createDraft(userId, title, desc);
+    const draftCreated = await createDraft(userId, title, desc);
+    return success(res, 201, draftCreated);
+  }),
+);
 
-    console.log(`[${new Date().toLocaleTimeString()}]: User name: ${session.user.name}`);
-    return res.json(feed).sendStatus(201);
-  } catch (e) {
-    return res.send({
-      message: `Error to find user! ${e}`,
-    });
-  }
-});
-
-router.put("/:postId", async (req, res) => {
-  try {
-    const session = await authConfig.api.getSession({ headers: req.headers });
-    if (!session) return res.status(401).json({ error: "Unauthorized" });
-
+router.get(
+  "/:postId",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
     const userId = session.user.id;
+
+    const { postId } = req.params;
+
+    const postFound = await getPostById(postId, userId);
+    if (!postFound) {
+      return failure(res, 404, "Draft not found with given id");
+    }
+
+    return success(res, 200, postFound);
+  }),
+);
+
+router.put(
+  "/:postId",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
     const { postId } = req.params;
     const { title, desc, featuredImg, content } = req.body;
 
-    const feed = await updateDraft(userId, postId, title, desc, featuredImg, content);
+    const postUpdated = await updateDraft(userId, postId, title, desc, featuredImg, content);
+    if (!postUpdated) {
+      return failure(res, 404, "Draft not found with given id");
+    }
 
-    console.log(`[${new Date().toLocaleTimeString()}]: User name: ${session.user.name}`);
-    return res.json(feed).sendStatus(201);
-  } catch (e) {
-    return res.send({
-      message: `Error to find user! ${e}`,
-    });
-  }
-});
+    return success(res, 200, "Draft updated successfully!");
+  }),
+);
 
 export default router;
