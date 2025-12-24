@@ -5,11 +5,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { Card } from "@/components/ui/card";
 import { getRelativeTime } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
-import type { Blog as BlogType } from "@/types/blog";
+import type { BlogPost } from "@/types/blog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
-  blog: BlogType;
+  blog: BlogPost;
   className?: string;
   type?: "post" | "draft";
 }
@@ -49,11 +49,12 @@ export default function PostCard({ blog, className = "", type = "post" }: Props)
             <div className="flex flex-col text-sm text-muted-foreground">
               <p className="">{blog?.author?.name}</p>
               <p className="flex gap-2">
-                <span>{blog?.likes ?? 0} likes</span>
-                {blog.published && (
+                {/*<span>{blog?. ?? 0} likes</span>*/}
+                <span>0 likes</span>
+                {blog.status === "published" && (
                   <>
                     <span>&bull;</span>
-                    <span>{getRelativeTime(blog?.published)}</span>
+                    <span>{getRelativeTime(blog?.publishedAt ?? "")}</span>
                   </>
                 )}
               </p>

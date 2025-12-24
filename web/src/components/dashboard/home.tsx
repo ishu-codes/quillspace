@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import Blog from "@/components/common/PostCard";
+import PostCard from "@/components/common/PostCard";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetFeed } from "@/fetchers/feed";
@@ -31,7 +31,7 @@ export default function Home() {
             <>
               {blogs.map((blog) => (
                 <Link to={`/posts/${blog.id}`} key={blog.id}>
-                  <Blog blog={blog} className="w-full" />
+                  <PostCard blog={blog} className="w-full" />
                 </Link>
               ))}
             </>

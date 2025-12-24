@@ -12,6 +12,7 @@ import draftsRouter from "./drafts";
 import listsRouter from "./lists";
 import postsRouter from "./posts";
 import libraryRouter from "./library";
+import usersRouter from "./users";
 
 const app = express();
 
@@ -53,5 +54,6 @@ app.use("/api/drafts", draftsRouter);
 app.use("/api/lists", listsRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/library", libraryRouter);
+app.use("/api/users", usersRouter);
 
 export default app;

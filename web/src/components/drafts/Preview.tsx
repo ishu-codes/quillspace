@@ -79,9 +79,9 @@ export default function Preview({ post }: Props) {
         </div>
       </div>
 
-      <aside className="w-full md:w-80 mb-auto flex flex-col gap-4 pr-4 sticky top-20 overflow-y-auto overflow-x-hidden">
+      <aside className="w-full md:w-60 mb-auto flex flex-col gap-4 pr-4 sticky top-20 overflow-y-auto overflow-x-hidden">
         <h4 className="text-xl font-semibold">Contents</h4>
-        <aside className="toc [&_ul_ul]:ml-4 w-80 hidden lg:block" />
+        <aside className="toc [&_ul_ul]:ml-4 max-w-full hidden lg:block overflow-x-hidden" />
       </aside>
     </div>
   );
