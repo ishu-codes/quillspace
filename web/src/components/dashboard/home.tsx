@@ -20,8 +20,8 @@ export default function Home() {
       {isLoading ? (
         <>
           {Array.from({ length: 10 }, (_, i) => i).map((idx) => (
-            <div className="w-full min-h-72">
-              <Skeleton className="w-[calc(100%-2rem)] h-[calc(100%-1rem)] m-auto" key={idx} />
+            <div className="w-full min-h-72" key={idx}>
+              <Skeleton className="w-[calc(100%-2rem)] h-[calc(100%-1rem)] m-auto" />
             </div>
           ))}
         </>

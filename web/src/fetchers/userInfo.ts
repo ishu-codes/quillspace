@@ -1,25 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+
 import type { Follower, UserProfileInfo } from "@/types/userInfo";
 import type { BlogPost } from "@/types/blog";
-// import { wait } from "@/lib/utils";
-
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:1337";
+import { makeRequest } from "./request";
 
 export function useUserInfo(userId: string) {
   return useQuery<UserProfileInfo>({
     queryKey: ["users", userId],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/api/users/${userId}`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Not authenticated!");
-
-      const response = await res.json();
-      return response.data;
-    },
+    queryFn: async () => await makeRequest("GET", `users/${userId}`, {}),
   });
 }
 
@@ -28,22 +18,16 @@ export function useUserPosts(userId: string) {
     queryKey: ["users", "posts", userId],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/api/users/${userId}/posts`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Not authenticated!");
-
-      const response = await res.json();
-      const data = response.data;
-      if (!Array.isArray(data)) {
-        console.warn("Invalid feed response");
-        return [];
-      }
-      console.log(data);
-      return data;
-    },
+    queryFn: async () =>
+      await makeRequest(
+        "GET",
+        `users/${userId}/posts`,
+        {},
+        {
+          consoleMsg: "Posts",
+          ensureArray: true,
+        },
+      ),
   });
 }
 
@@ -52,22 +36,7 @@ export function useUserFollowers(userId: string) {
     queryKey: ["users", "followers", userId],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/api/users/${userId}/followers`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Not authenticated!");
-
-      const response = await res.json();
-      const data = response.data;
-      if (!Array.isArray(data)) {
-        console.warn("Invalid feed response");
-        return [];
-      }
-      console.log(data);
-      return data;
-    },
+    queryFn: async () => await makeRequest("GET", `users/${userId}/followers`, {}, { ensureArray: true }),
   });
 }
 
@@ -76,21 +45,6 @@ export function useUserFollowing(userId: string) {
     queryKey: ["users", "following", userId],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/api/users/${userId}/following`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Not authenticated!");
-
-      const response = await res.json();
-      const data = response.data;
-      if (!Array.isArray(data)) {
-        console.warn("Invalid feed response");
-        return [];
-      }
-      console.log(data);
-      return data;
-    },
+    queryFn: async () => await makeRequest("GET", `users/${userId}/following`, {}, { ensureArray: true }),
   });
 }

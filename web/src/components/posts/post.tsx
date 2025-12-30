@@ -7,11 +7,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import RenderMarkdown from "@/components/common/RenderMarkdown";
 import DraftNotFound from "@/components/drafts/NotFound";
+import ErrorPage from "../common/ErrorPage";
 // import { AsideContents } from "../common/AsideContents";
 // import { extractHeadings } from "@/lib/contents";
 
 export default function PostPage() {
   const { postId } = useParams();
+  if (!postId) return <ErrorPage message="Post not found!" />;
+  return <PostContent {...{ postId }} />;
+}
+
+function PostContent({ postId }: { postId: string }) {
   const { data: post, isLoading } = useGetPost(postId);
 
   useEffect(() => {

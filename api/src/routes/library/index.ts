@@ -1,38 +1,41 @@
 import { Router } from "express";
+import type { Response } from "express";
 
+import { asyncHandler } from "../../config/handler";
+import { failure, success } from "../../config/response";
+import { requireAuth, type AuthRequest } from "../../middlewares/auth";
 import { getYourLists, getPosts } from "./controller";
-import authConfig from "../../auth";
-import { PostType } from "../../types/post";
+import type { PostType } from "../../types/post";
 
 const router = Router();
 
-router.get("/your-lists", async (req, res) => {
-  try {
-    const session = await authConfig.api.getSession({ headers: req.headers });
-    if (!session) return res.status(401).json({ error: "Unauthorized" });
+router.get(
+  "/your-lists",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
     const userId = session.user.id;
 
-    return res.json(await getYourLists(userId));
-  } catch (e) {
-    return res.send({
-      message: `Error to find user! ${e}`,
-    });
-  }
-});
+    const yourLists = await getYourLists(userId);
 
-router.get("/posts/:postType", async (req, res) => {
-  try {
-    const session = await authConfig.api.getSession({ headers: req.headers });
-    if (!session) return res.status(401).json({ error: "Unauthorized" });
+    if (!yourLists) return failure(res, 404, "Your lists not found");
+    return success(res, 200, yourLists);
+  }),
+);
+
+router.get(
+  "/posts/:postType",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
     const userId = session.user.id;
     const { postType } = req.params;
 
-    return res.json(await getPosts(userId, postType as PostType));
-  } catch (e) {
-    return res.send({
-      message: `Error to find user! ${e}`,
-    });
-  }
-});
+    const postsFound = await getPosts(userId, postType as PostType);
+
+    // if (!postsFound) return failure(res, 404, "Posts not found!");
+    return success(res, 200, postsFound);
+  }),
+);
 
 export default router;

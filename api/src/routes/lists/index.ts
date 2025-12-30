@@ -1,30 +1,41 @@
 import { Router } from "express";
+import type { Response } from "express";
+
+import { asyncHandler } from "../../config/handler";
+import { failure, success } from "../../config/response";
 import { getMyLists, createMyList } from "./controllers/my-lists";
+import { AuthRequest, requireAuth } from "../../middlewares/auth";
 
 const router = Router();
 
-router.get("/my-lists", async (_, res) => {
-    try {
-        // const userId = req.body.userId;
-        const myLists = await getMyLists("");
-        return myLists;
-    } catch (err) {
-        return res.send({
-            message: `Error while fetching your lists! ${err}`,
-        });
-    }
-});
+router.get(
+  "/my-lists",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
 
-router.post("/my-lists", async (req, res) => {
-    try {
-        const { userId, title, desc } = req.body;
-        const createdList = await createMyList(userId, title, desc ?? null);
-        return res.sendStatus(201).send(createdList);
-    } catch (err) {
-        return res.send({
-            message: `Error while parsing request body! ${err}`,
-        });
-    }
-});
+    const myLists = await getMyLists(userId);
+
+    if (!myLists) return failure(res, 404, "My lists not found!");
+    return success(res, 200, myLists);
+  }),
+);
+
+router.post(
+  "/my-lists",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
+    const { title, desc } = req.body;
+
+    const listCreated = await createMyList(userId, title, desc ?? null);
+
+    if (!listCreated) return failure(res, 300, "Failed to create list");
+    return success(res, 201, listCreated);
+  }),
+);
 
 export default router;

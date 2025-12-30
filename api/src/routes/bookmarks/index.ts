@@ -1,0 +1,59 @@
+import { Router, type Response } from "express";
+
+import { asyncHandler } from "../../config/handler";
+import { failure, success } from "../../config/response";
+import { createBookmark, deleteBookmark, getBookmarks } from "./controller";
+import { requireAuth, type AuthRequest } from "../../middlewares/auth";
+
+const router = Router();
+
+router.get(
+  "/",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
+    const bookmarksFound = await getBookmarks(userId);
+    if (!bookmarksFound) return failure(res, 404, "Error to fetch bookmarks");
+
+    console.log(`GET /bookmarks all bookmarks`);
+    return success(res, 200, bookmarksFound);
+  }),
+);
+
+router.post(
+  "/",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
+    const { postId } = req.body;
+
+    const bookmarkCreated = await createBookmark(userId, postId);
+    if (!bookmarkCreated) return failure(res, 404, "Error to create bookmark");
+
+    console.log(`POST /bookmarks new bookmark (${postId})`);
+    return success(res, 201, bookmarkCreated);
+  }),
+);
+
+router.delete(
+  "/",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
+    const { bookmarkId, postId } = req.body;
+
+    const bookmarkDeleted = await deleteBookmark(userId, postId, bookmarkId);
+    if (!bookmarkDeleted) return failure(res, 404, "Bookmark not found!");
+
+    console.log(`DELETE /bookmarks (${postId})`);
+    return success(res, 200, bookmarkDeleted);
+  }),
+);
+
+export default router;
