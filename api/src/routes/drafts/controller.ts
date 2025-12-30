@@ -1,6 +1,6 @@
 import type { Post } from "@prisma/client";
 
-import { db } from "../database";
+import { db } from "../../database";
 
 function generateSlug(title: string) {
   return title.replace(" ", "-");

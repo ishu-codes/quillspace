@@ -124,7 +124,7 @@ function Posts({ userId }: PostsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2">
+    <div className="grid grid-cols-1 md:grid-cols-3">
       {userPosts?.map((post) => (
         <Link to={`/posts/${post.id}`} key={post.id}>
           <PostCard blog={post} className="w-full" />

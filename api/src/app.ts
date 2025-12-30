@@ -7,12 +7,12 @@ import authConfig from "./auth";
 import { failure, success } from "./config/response";
 // import { requireAuth } from "./middlewares/auth";
 
-import feedRouter from "./feed";
-import draftsRouter from "./drafts";
-import listsRouter from "./lists";
-import postsRouter from "./posts";
-import libraryRouter from "./library";
-import usersRouter from "./users";
+import feedRouter from "./routes/feed";
+import draftsRouter from "./routes/drafts";
+import listsRouter from "./routes/lists";
+import postsRouter from "./routes/posts";
+import libraryRouter from "./routes/library";
+import usersRouter from "./routes/users";
 
 const app = express();
 

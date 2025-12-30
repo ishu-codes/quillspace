@@ -1,4 +1,4 @@
-import { db } from "../database";
+import { db } from "../../database";
 
 export async function getFeed(userId: string) {
   // const followingIds = (await db.follow.findMany({ where: { followerId: userId } })).map((f) => f.followingId);

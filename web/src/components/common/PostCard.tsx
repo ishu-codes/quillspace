@@ -18,6 +18,8 @@ export default function PostCard({ blog, className = "", type = "post" }: Props)
   const handleToggleLike = () => {};
   const handleToggleBookmark = () => {};
 
+  const likes = 50 + Math.round(Math.random() * 100);
+
   return (
     <div
       className={cn(
@@ -50,13 +52,14 @@ export default function PostCard({ blog, className = "", type = "post" }: Props)
               <p className="">{blog?.author?.name}</p>
               <p className="flex gap-2">
                 {/*<span>{blog?. ?? 0} likes</span>*/}
-                <span>0 likes</span>
-                {blog.status === "published" && (
+                <span>{likes} likes</span>
+                {/*{blog.status === "published" && (
                   <>
                     <span>&bull;</span>
                     <span>{getRelativeTime(blog?.publishedAt ?? "")}</span>
                   </>
-                )}
+                )}*/}
+                {/*{blog?.authorId}*/}
               </p>
             </div>
           </div>

@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import { getYourLists, getPosts } from "./controller";
-import authConfig from "../auth";
-import { PostType } from "../types/post";
+import authConfig from "../../auth";
+import { PostType } from "../../types/post";
 
 const router = Router();
 
