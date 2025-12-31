@@ -1,13 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import tocbot from "tocbot";
 import { useParams } from "react-router-dom";
+import { BookmarkMinus, BookmarkPlusIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import { useGetPost } from "@/fetchers/post";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import RenderMarkdown from "@/components/common/RenderMarkdown";
 import DraftNotFound from "@/components/drafts/NotFound";
-import ErrorPage from "../common/ErrorPage";
+import ErrorPage from "@/components/common/ErrorPage";
+import { Button } from "@/components/ui/button";
+import { useBookmarkDelete, useBookmarkPost } from "@/fetchers/bookmarks";
 // import { AsideContents } from "../common/AsideContents";
 // import { extractHeadings } from "@/lib/contents";
 
@@ -19,6 +23,21 @@ export default function PostPage() {
 
 function PostContent({ postId }: { postId: string }) {
   const { data: post, isLoading } = useGetPost(postId);
+
+  const { mutateAsync: addToBookmarks } = useBookmarkPost();
+  const { mutateAsync: removeFromBookmarks } = useBookmarkDelete();
+
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+  const handleToggleBookmark = async () => {
+    const func = isBookmarked ? removeFromBookmarks : addToBookmarks;
+    const status = await func({ postId });
+
+    if (status) {
+      toast.success(`Successfully ${isBookmarked ? "removed from" : "added to"} bookmarks`);
+      setIsBookmarked((prev) => !prev);
+    } else toast.error(`Failed to ${isBookmarked ? "remove from" : "add to"} bookmarks`);
+  };
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -51,16 +70,13 @@ function PostContent({ postId }: { postId: string }) {
       });
     });
 
+    setIsBookmarked(post?.bookmarked ?? false);
+
     return () => tocbot.destroy();
   }, [post]);
 
-  if (isLoading) {
-    return <Skeleton className="w-full h-100"></Skeleton>;
-  }
-
-  if (!post) {
-    return <DraftNotFound />;
-  }
+  if (isLoading) return <Skeleton className="w-full h-100" />;
+  if (!post) return <DraftNotFound />;
 
   return (
     <div className="markdown-content markdown-scroll overflow-auto prose prose-sm dark:prose-invert h-[calc(100vh-4rem)] w-full flex justify-between gap-20 p-4">
@@ -82,14 +98,28 @@ function PostContent({ postId }: { postId: string }) {
                   <p className="text-xl text-muted-foreground">{post.desc}</p>
                 </div>
 
-                <div className="flex gap-4">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={post?.author?.image} alt="author-image" />
-                    <AvatarFallback className="border-2 text-xl">{post?.author?.name.charAt(0) ?? "A"}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <h4 className="">{post.author?.name}</h4>
-                    <p className="text-sm text-muted-foreground">{post.author?.id}</p>
+                <div className="flex justify-between">
+                  <div className="flex gap-4">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={post?.author?.image} alt="author-image" />
+                      <AvatarFallback className="border-2 text-xl">
+                        {post?.author?.name.charAt(0) ?? "A"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <h4 className="">{post.author?.name}</h4>
+                      <p className="text-sm text-muted-foreground">{post.author?.id}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    {[
+                      { title: "Bookmark", isActive: isBookmarked, Icon: BookmarkPlusIcon, IconActive: BookmarkMinus },
+                    ].map((item) => (
+                      <Button variant={"outline"} size={"icon-lg"} key={item.title} onClick={handleToggleBookmark}>
+                        {item.isActive ? <item.IconActive className="text-destructive" /> : <item.Icon />}
+                      </Button>
+                    ))}
                   </div>
                 </div>
 
@@ -125,9 +155,9 @@ function PostContent({ postId }: { postId: string }) {
           ))}
         </div>
       </div>*/}
-      <aside className="w-full md:w-60 mb-auto flex flex-col gap-4 pr-4 sticky top-20 overflow-y-auto overflow-x-hidden">
+      <aside className="hidden lg:flex w-full md:w-60 mb-auto flex-col gap-4 pr-4 sticky top-20 overflow-y-auto overflow-x-hidden">
         <h4 className="text-xl font-semibold">Contents</h4>
-        <aside className="toc [&_ul_ul]:ml-4 max-w-full hidden lg:block overflow-x-hidden" />
+        <aside className="toc [&_ul_ul]:ml-4 max-w-full overflow-x-hidden" />
       </aside>
       {/*<AsideContents headings={extractHeadings(post?.content ?? "")} />*/}
     </div>

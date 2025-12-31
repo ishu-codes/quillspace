@@ -8,6 +8,14 @@ export function useGetPost(postId: string) {
     queryKey: ["post", postId],
     staleTime: 1000 * 60 * 60, // 1 hr
     retry: 2,
-    queryFn: async () => await makeRequest("GET", `posts/${postId}`),
+    queryFn: async () =>
+      await makeRequest(
+        "GET",
+        `posts/${postId}`,
+        {},
+        {
+          consoleMsg: "Post",
+        },
+      ),
   });
 }

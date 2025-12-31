@@ -46,6 +46,7 @@ export type BlogPost = {
   viewsCount: number;
   createdAt: string;
   updatedAt: string;
+  bookmarked: boolean;
 };
 
 export type MenuItem = {

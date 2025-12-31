@@ -8,9 +8,6 @@ export async function getFeed(userId: string) {
   // 	orderBy: { createdAt: "desc" },
   // });
   return db.post.findMany({
-    // include: {
-    //   author: true,
-    // },
     select: {
       id: true,
       title: true,
@@ -25,6 +22,9 @@ export async function getFeed(userId: string) {
           image: true,
         },
       },
+    },
+    where: {
+      status: "published",
     },
   });
 }

@@ -60,6 +60,21 @@ export async function getUserInfo(userId: string) {
 
 export async function getUserPosts(userId: string) {
   return await db.post.findMany({
+    select: {
+      id: true,
+      title: true,
+      featuredImg: true,
+      slug: true,
+      publishedAt: true,
+      viewsCount: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
     where: {
       authorId: userId,
       status: "published",

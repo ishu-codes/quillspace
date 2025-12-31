@@ -1,9 +1,12 @@
 // import { BookmarkIcon, CalendarIcon, HeartIcon, MessageCircleIcon } from "lucide-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { Button } from "@/components/ui/button";
 // import { Card } from "@/components/ui/card";
-import { getRelativeTime } from "@/lib/dateTime";
+// import { getRelativeTime } from "@/lib/dateTime";
 import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types/blog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +17,7 @@ interface Props {
   type?: "post" | "draft";
 }
 
-export default function PostCard({ blog, className = "", type = "post" }: Props) {
+export default function PostCard({ blog, className = "", type: postType = "post" }: Props) {
   const handleToggleLike = () => {};
   const handleToggleBookmark = () => {};
 
@@ -41,7 +44,7 @@ export default function PostCard({ blog, className = "", type = "post" }: Props)
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">{blog?.title}</h3>
 
-        {type === "post" ? (
+        {postType === "post" ? (
           <div className="flex items-center gap-2">
             <Avatar className="w-9 h-9">
               <AvatarImage src={blog?.author?.image} alt={blog?.author?.name} />
@@ -53,18 +56,23 @@ export default function PostCard({ blog, className = "", type = "post" }: Props)
               <p className="flex gap-2">
                 {/*<span>{blog?. ?? 0} likes</span>*/}
                 <span>{likes} likes</span>
-                {/*{blog.status === "published" && (
+                {postType === "post" ? (
                   <>
                     <span>&bull;</span>
-                    <span>{getRelativeTime(blog?.publishedAt ?? "")}</span>
+                    <span>{dayjs(blog?.publishedAt ?? "").fromNow()}</span>
                   </>
-                )}*/}
+                ) : (
+                  <>
+                    <span>&bull;</span>
+                    <span>{dayjs(blog?.createdAt ?? "").fromNow()}</span>
+                  </>
+                )}
                 {/*{blog?.authorId}*/}
               </p>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground">{blog.desc.slice(0, 50)}...</p>
+          <p className="text-sm text-muted-foreground">{blog.desc?.slice(0, 50)}...</p>
         )}
       </div>
 

@@ -35,7 +35,7 @@ router.post(
     if (!bookmarkCreated) return failure(res, 404, "Error to create bookmark");
 
     console.log(`POST /bookmarks new bookmark (${postId})`);
-    return success(res, 201, bookmarkCreated);
+    return success(res, 201, "Bookmarked successfully");
   }),
 );
 
@@ -46,13 +46,13 @@ router.delete(
     const session = req.authSession!;
     const userId = session.user.id;
 
-    const { bookmarkId, postId } = req.body;
+    const { postId } = req.body;
 
-    const bookmarkDeleted = await deleteBookmark(userId, postId, bookmarkId);
+    const bookmarkDeleted = await deleteBookmark(userId, postId);
     if (!bookmarkDeleted) return failure(res, 404, "Bookmark not found!");
 
     console.log(`DELETE /bookmarks (${postId})`);
-    return success(res, 200, bookmarkDeleted);
+    return success(res, 200, "Bookmark deleted successfully");
   }),
 );
 

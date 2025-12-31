@@ -49,6 +49,21 @@ export async function getPosts(userId: string, postType: PostType) {
     ).map((b) => b.postId);
 
     return await db.post.findMany({
+      select: {
+        id: true,
+        title: true,
+        featuredImg: true,
+        slug: true,
+        publishedAt: true,
+        viewsCount: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
       where: {
         id: {
           in: bookmarkedPosts,
@@ -57,7 +72,22 @@ export async function getPosts(userId: string, postType: PostType) {
     });
   }
 
-  return await db.post.findMany({
+  return db.post.findMany({
+    select: {
+      id: true,
+      title: true,
+      featuredImg: true,
+      slug: true,
+      publishedAt: true,
+      viewsCount: true,
+      author: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
     where: {
       authorId: userId,
       status: postType,

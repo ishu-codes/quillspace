@@ -7,6 +7,7 @@ import authConfig from "./auth";
 import { failure, success } from "./config/response";
 // import { requireAuth } from "./middlewares/auth";
 
+import bookmarksRouter from "./routes/bookmarks";
 import feedRouter from "./routes/feed";
 import draftsRouter from "./routes/drafts";
 import listsRouter from "./routes/lists";
@@ -49,6 +50,7 @@ app.all("/api/auth/*splat", toNodeHandler(authConfig));
 app.get("/", (_, res) => {
   return success(res, 200, "Hello World!");
 });
+app.use("/api/bookmarks", bookmarksRouter);
 app.use("/api/feed", feedRouter);
 app.use("/api/drafts", draftsRouter);
 app.use("/api/lists", listsRouter);

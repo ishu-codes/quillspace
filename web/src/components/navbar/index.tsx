@@ -234,9 +234,9 @@ function SidebarTriggerWithLogo() {
     <div className="flex gap-2">
       <SidebarTrigger variant={"ghost"} />
       {!isSidebarOpen && (
-        <Link className="hidden md:block" to="/">
+        <div className="hidden md:block">
           <Logo />
-        </Link>
+        </div>
       )}
     </div>
   );

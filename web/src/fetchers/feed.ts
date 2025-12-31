@@ -8,6 +8,6 @@ export function useGetFeed() {
     queryKey: ["feed"],
     staleTime: 1000 * 60, // 1 min
     retry: 2,
-    queryFn: async () => await makeRequest("GET", "feed", {}, { ensureArray: true }),
+    queryFn: async () => await makeRequest("GET", "feed", {}, { ensureArray: true, consoleMsg: "Feed" }),
   });
 }

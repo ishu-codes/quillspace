@@ -1,5 +1,5 @@
 export type Bookmark = {
-  id: string;
+  id: number;
   postId: string;
   userId: string;
 };

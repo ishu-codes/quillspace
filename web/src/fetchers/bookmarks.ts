@@ -21,9 +21,9 @@ export function useGetBookmarks() {
 }
 
 export function useBookmarkDelete() {
-  return useMutation<Bookmark, Error, { postId: string; bookmarkId: number }>({
+  return useMutation<Bookmark, Error, { postId: string }>({
     retry: 2,
-    mutationFn: async ({ postId, bookmarkId }: { postId: string; bookmarkId: number }) =>
-      await makeRequest("DELETE", "bookmarks", { postId, bookmarkId }, { consoleMsg: "Bookmark deleted" }),
+    mutationFn: async ({ postId }: { postId: string }) =>
+      await makeRequest("DELETE", "bookmarks", { postId }, { consoleMsg: "Bookmark deleted" }),
   });
 }
