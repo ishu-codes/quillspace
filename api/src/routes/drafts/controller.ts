@@ -9,7 +9,7 @@ function generateSlug(title: string) {
 export async function getPostById(postId: string, userId: string) {
   return await db.post.findUnique({
     where: {
-      id: parseInt(postId),
+      id: postId,
       authorId: userId,
     },
   });
@@ -37,13 +37,13 @@ export async function updateDraft(
   // slug: string | null = null,
   content: string | null,
 ): Promise<Post | false> {
-  const id = Number(postId);
-  if (!Number.isInteger(id)) return false;
+  // const id = Number(postId);
+  // if (!Number.isInteger(id)) return false;
 
   try {
     return await db.post.update({
       where: {
-        id: parseInt(postId),
+        id: postId,
         authorId: userId,
       },
       data: {

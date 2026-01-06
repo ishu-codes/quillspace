@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+// import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
   content: string;
@@ -33,18 +33,26 @@ export default function RenderMarkdown({ content }: Props) {
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw, rehypeSlug]}
       components={{
-        h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-6 mb-3 scroll-mt-20" {...props} />,
-        h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-5 mb-2 scroll-mt-20" {...props} />,
-        h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-4 mb-2" {...props} />,
-        h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 mb-1" {...props} />,
+        h1: ({ node, ...props }) => (
+          <h1 className="text-3xl font-bold mt-6 pt-8 mb-1 border-b scroll-mt-20" {...props} />
+        ),
+        h2: ({ node, ...props }) => (
+          <h2 className="text-2xl font-bold mt-5 pt-8 mb-0 border-b scroll-mt-20" {...props} />
+        ),
+        h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-4 pt-8 mb-0 border-b-2" {...props} />,
+        h4: ({ node, ...props }) => <h4 className="text-lg font-bold mt-3 pt-8 mb-0" {...props} />,
         h5: ({ node, ...props }) => <h5 className="text-base font-bold mt-2" {...props} />,
         h6: ({ node, ...props }) => <h6 className="text-sm font-bold mt-2" {...props} />,
-        p: ({ node, ...props }) => <p className="my-3 leading-7" {...props} />,
+        p: ({ node, ...props }) => <p className="my-3 leading-7 text-foreground/70" {...props} />,
         blockquote: ({ node, ...props }) => (
           <blockquote className="border-l-4 border-primary pl-4 italic my-3 text-muted-foreground" {...props} />
         ),
-        ul: ({ node, ...props }) => <ul className="list-disc list-inside my-3 space-y-1" {...props} />,
-        ol: ({ node, ...props }) => <ol className="list-decimal list-inside my-3 space-y-1" {...props} />,
+        ul: ({ node, ...props }) => (
+          <ul className="list-disc list-inside my-3 space-y-1 text-foreground/70" {...props} />
+        ),
+        ol: ({ node, ...props }) => (
+          <ol className="list-decimal list-inside my-3 space-y-1 text-foreground/70" {...props} />
+        ),
         code: (props: { children?: React.ReactNode }) => {
           const { children } = props;
           const isInline = typeof children === "string" && !children.includes("\n");
