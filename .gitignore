@@ -37,7 +37,8 @@ dist-ssr
 schema.dbml
 
 # ToDo File
-web/ToDo.md
+*/ToDo.md
+ToDo.md
 
 # Raw Data files
 raw/
