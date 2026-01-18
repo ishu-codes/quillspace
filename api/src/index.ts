@@ -1,7 +1,7 @@
 import os from "node:os";
 import dotenv from "dotenv";
 
-import app from "./app";
+import app from "./app.js";
 
 dotenv.config();
 const PORT = Number(process.env.PORT) || 1337;
@@ -11,8 +11,7 @@ function getLocalIP() {
   const nets = os.networkInterfaces();
   for (const name of Object.keys(nets)) {
     if (nets[name] === undefined) break;
-    for (const net of nets[name])
-      if (net.family === "IPv4" && !net.internal) return net.address;
+    for (const net of nets[name]) if (net.family === "IPv4" && !net.internal) return net.address;
   }
   return "127.0.0.1";
 }
@@ -31,10 +30,6 @@ app.listen(PORT, "0.0.0.0", () => {
 
   console.clear();
   console.log("Server running at:");
-  console.log(
-    `${color.green("➜")}  ${color.bold("Local:")}    ${color.cyan(localUrl)}`,
-  );
-  console.log(
-    `${color.green("➜")}  ${color.bold("Network:")}  ${color.cyan(networkUrl)}\n`,
-  );
+  console.log(`${color.green("➜")}  ${color.bold("Local:")}    ${color.cyan(localUrl)}`);
+  console.log(`${color.green("➜")}  ${color.bold("Network:")}  ${color.cyan(networkUrl)}\n`);
 });
