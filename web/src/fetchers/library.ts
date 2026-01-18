@@ -19,7 +19,7 @@ export function useYourLists() {
   });
 }
 
-export function usePosts(postType: "draft" | "published" | "archived" | "bookmarked") {
+export function usePosts(postType: "DRAFT" | "PUBLISHED" | "ARCHIVED" | "BOOKMARKED") {
   return useQuery<BlogPost[]>({
     queryKey: ["posts", postType],
     staleTime: 1000 * 60 * 60, // 1 hr

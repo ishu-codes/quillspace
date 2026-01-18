@@ -59,3 +59,20 @@ export async function updateDraft(
     return false;
   }
 }
+
+export async function publishDraft(userId: string, postId: string): Promise<Post | false> {
+  try {
+    return await db.post.update({
+      where: {
+        id: postId,
+        authorId: userId,
+      },
+      data: {
+        status: "PUBLISHED",
+        publishedAt: new Date(),
+      },
+    });
+  } catch {
+    return false;
+  }
+}

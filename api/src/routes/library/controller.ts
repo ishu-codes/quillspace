@@ -6,14 +6,14 @@ export async function getYourLists(userId: string) {
     db.post.count({
       where: {
         authorId: userId,
-        status: "published",
+        status: "PUBLISHED",
       },
     }),
 
     db.post.count({
       where: {
         authorId: userId,
-        status: "draft",
+        status: "DRAFT",
       },
     }),
 
@@ -39,7 +39,7 @@ export async function getYourLists(userId: string) {
 }
 
 export async function getPosts(userId: string, postType: PostType) {
-  if (postType === "bookmarked") {
+  if (postType === "BOOKMARKED") {
     const bookmarkedPosts = (
       await db.bookmark.findMany({
         where: {

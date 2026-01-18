@@ -1,19 +1,35 @@
 import type { Dispatch, SetStateAction } from "react";
-import { Button } from "../ui/button";
-import { ButtonGroup } from "../ui/button-group";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon, EllipsisVerticalIcon } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/navbar/ThemeToggle";
+import type { BlogPost } from "@/types/blog";
 
 interface Props {
+  post: BlogPost;
   currentPage: string;
   setCurrentPage: Dispatch<SetStateAction<string>>;
   setPreviewMode: Dispatch<SetStateAction<boolean>>;
   handleSaveChanges: () => Promise<void>;
+  handlePublishDraft: () => Promise<void>;
 }
 
-export default function Titlebar({ currentPage, setCurrentPage, setPreviewMode, handleSaveChanges }: Props) {
+export default function Titlebar({
+  post,
+  currentPage,
+  setCurrentPage,
+  setPreviewMode,
+  handleSaveChanges,
+  handlePublishDraft,
+}: Props) {
   const navigate = useNavigate();
   return (
     <div className="w-full flex items-center justify-between px-2 md:px-3 py-3 bg-background border-b fixed top-0 z-40">
@@ -62,7 +78,16 @@ export default function Titlebar({ currentPage, setCurrentPage, setPreviewMode, 
         <Button variant="outline" size="sm" onClick={handleSaveChanges}>
           Save Draft
         </Button>
-        <Button size="sm">Publish</Button>
+
+        {post?.status === "PUBLISHED" ? (
+          <Button size={"sm"} asChild>
+            <Link to={`/posts/${post.id}`}>Go to post</Link>
+          </Button>
+        ) : (
+          <Button size="sm" onClick={handlePublishDraft}>
+            Publish
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ export async function makeRequest(
     consoleMsg?: string;
     ensureArray?: boolean;
     waitTime?: number;
+    rawResponse?: boolean;
   } = {},
 ) {
   const requestOptions: RequestInit = {
@@ -27,7 +28,8 @@ export async function makeRequest(
   const res = await fetch(`${BASE_URL}/api/${url}`, requestOptions);
   if (!res.ok) throw new Error((await res.json()).error);
 
-  const data = (await res.json()).data;
+  const response = await res.json();
+  const data = response.data;
   if (options.consoleMsg) console.log(`${options.consoleMsg}: `, data);
 
   if (options.ensureArray && !Array.isArray(data)) {
@@ -37,5 +39,6 @@ export async function makeRequest(
 
   if (options.waitTime) await wait(options.waitTime);
 
+  if (options.rawResponse) return response;
   return data;
 }

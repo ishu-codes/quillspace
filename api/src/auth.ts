@@ -1,10 +1,10 @@
-import { betterAuth } from "better-auth";
+import { APIError, betterAuth, BetterAuthPlugin } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-// import { anonymous, username } from "better-auth/plugins";
 import { PrismaClient } from "@prisma/client";
-
 import dotenv from "dotenv";
 dotenv.config();
+
+import { createUserInfoAfterSignUp } from "./auth/plugins";
 
 const db = new PrismaClient();
 
@@ -29,6 +29,7 @@ const authConfig: ReturnType<typeof betterAuth> = betterAuth({
   //     },
   //   },
   plugins: [
+    createUserInfoAfterSignUp(),
     // username(),
     // anonymous({
     // 	generateName: async () => generateDemoName()

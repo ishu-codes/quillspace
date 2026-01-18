@@ -25,7 +25,7 @@ export async function getUserInfo(userId: string) {
     db.post.count({
       where: {
         authorId: userId,
-        status: "published",
+        status: "PUBLISHED",
       },
     }),
 
@@ -77,7 +77,7 @@ export async function getUserPosts(userId: string) {
     },
     where: {
       authorId: userId,
-      status: "published",
+      status: "PUBLISHED",
     },
   });
 }

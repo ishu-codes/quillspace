@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetDraft, useUpdateDraft } from "@/fetchers/drafts";
+import { useGetDraft, usePublishDraft, useUpdateDraft } from "@/fetchers/drafts";
 import type { BlogPost } from "@/types/blog";
 
 import Editor from "./Editor";
@@ -12,10 +12,17 @@ import Preview from "./Preview";
 import Titlebar from "./Titlebar";
 import { toast } from "sonner";
 
-export default function Draft() {
+export default function DraftPage() {
   const { draftId } = useParams();
-  const { data: initialPost, isLoading } = useGetDraft(draftId!);
+
+  if (!draftId) return <DraftNotFound message="Invalid Draft Id!" />;
+  return <Draft {...{ draftId }} />;
+}
+
+export function Draft({ draftId }: { draftId: string }) {
+  const { data: initialPost, isLoading } = useGetDraft(draftId);
   const { mutateAsync: updateDraft } = useUpdateDraft();
+  const { mutateAsync: publishDraft } = usePublishDraft();
 
   const [post, setPost] = useState<BlogPost | null>(null);
   const [changedFields, setChangedFields] = useState<(keyof BlogPost)[]>([]);
@@ -65,6 +72,13 @@ export default function Draft() {
     } else toast.error("Failed to saved the changes!", { description: result?.error });
   };
 
+  const handlePublishDraft = async () => {
+    const result = await publishDraft({ postId: draftId });
+
+    if (result.success) toast.success(result.data);
+    else toast.error(result.error);
+  };
+
   if (isLoading) {
     return <Skeleton className="w-full h-100"></Skeleton>;
   }
@@ -75,7 +89,7 @@ export default function Draft() {
 
   return (
     <div className="w-full h-screen flex-col gap-4 mx-auto">
-      <Titlebar {...{ currentPage, setCurrentPage, setPreviewMode, handleSaveChanges }} />
+      <Titlebar {...{ post, currentPage, setCurrentPage, setPreviewMode, handleSaveChanges, handlePublishDraft }} />
 
       {previewMode ? (
         <Preview {...{ post }} />

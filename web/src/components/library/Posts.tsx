@@ -9,7 +9,7 @@ export default function Posts({
   postType,
   prefixUrl = "/posts",
 }: {
-  postType: "draft" | "published" | "archived" | "bookmarked";
+  postType: "DRAFT" | "PUBLISHED" | "ARCHIVED" | "BOOKMARKED";
   prefixUrl?: string;
 }) {
   const { data: blogs, isLoading } = usePosts(postType);

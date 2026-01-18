@@ -24,7 +24,7 @@ export async function getFeed(userId: string) {
       },
     },
     where: {
-      status: "published",
+      status: "PUBLISHED",
     },
   });
 }

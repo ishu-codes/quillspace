@@ -2,7 +2,7 @@ import { Router, type Response } from "express";
 
 import { asyncHandler } from "../../config/handler";
 import { failure, success } from "../../config/response";
-import { createDraft, getPostById, updateDraft } from "./controller";
+import { createDraft, getPostById, publishDraft, updateDraft } from "./controller";
 import { requireAuth, type AuthRequest } from "../../middlewares/auth";
 
 const router = Router();
@@ -54,6 +54,23 @@ router.put(
     }
 
     return success(res, 200, "Draft updated successfully!");
+  }),
+);
+
+router.get(
+  "/:postId/publish",
+  requireAuth,
+  asyncHandler(async (req: AuthRequest, res: Response) => {
+    const session = req.authSession!;
+    const userId = session.user.id;
+
+    const { postId } = req.params;
+
+    const draftPublished = await publishDraft(userId, postId);
+    if (!draftPublished)
+      return failure(res, 404, "Draft not found with given id");
+
+    return success(res, 200, "Draft published successfully!");
   }),
 );
 

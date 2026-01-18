@@ -1,1 +1,1 @@
-export type PostType = "draft" | "published" | "archived" | "bookmarked";
+export type PostType = "DRAFT" | "PUBLISHED" | "ARCHIVED" | "BOOKMARKED";

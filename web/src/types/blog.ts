@@ -40,7 +40,7 @@ export type BlogPost = {
   content: string;
   featuredImg: string;
   slug: string;
-  status: "draft" | "published" | "archived";
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   // lists       PostList[]
   publishedAt?: string;
   viewsCount: number;

@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type { BlogPost } from "@/types/blog";
+import type { MessageResponse } from "@/types/response";
 import { makeRequest } from "./request";
 
 export function useCreateDraft() {
@@ -22,7 +23,7 @@ export function useGetDraft(draftId: string) {
 
 export function useUpdateDraft() {
   return useMutation<
-    { success: boolean; data?: string; error?: string },
+    MessageResponse,
     Error,
     { postId: number; title?: string; desc?: string | null; featuredImg?: string | null; content?: string | null }
   >({
@@ -39,6 +40,14 @@ export function useUpdateDraft() {
       desc?: string | null;
       featuredImg?: string | null;
       content?: string | null;
-    }) => await makeRequest("PUT", `drafts/${postId}`, { title, desc, featuredImg, content }),
+    }) => await makeRequest("PUT", `drafts/${postId}`, { title, desc, featuredImg, content }, { rawResponse: true }),
+  });
+}
+
+export function usePublishDraft() {
+  return useMutation<MessageResponse, Error, { postId: string }>({
+    retry: 2,
+    mutationFn: async ({ postId }: { postId: string }) =>
+      await makeRequest("GET", `drafts/${postId}/publish`, {}, { rawResponse: true }),
   });
 }

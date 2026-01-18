@@ -22,7 +22,7 @@ model Post {
   content     String
   featuredImg String
   slug        String     @unique
-  status      String     @default("draft") // draft, published, archived
+  status      PostStatus     @default(DRAFT) // draft, published, archived
   lists       PostList[]
   publishedAt DateTime?
   viewsCount  Int        @default(0)
