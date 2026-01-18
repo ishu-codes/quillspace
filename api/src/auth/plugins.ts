@@ -15,7 +15,7 @@ export const createUserInfoAfterSignUp = () => {
           },
           handler: createAuthMiddleware(async (ctx) => {
             try {
-              const returned: SignUpResponse = ctx.context.returned;
+              const returned = ctx.context.returned as SignUpResponse;
 
               // Check if returned has user property
               if (!(returned && returned.user)) {
