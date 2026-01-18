@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 
-import authConfig from "../auth";
+import authConfig from "../auth/index.js";
 import { failure } from "../config/response";
 import type { AuthSession } from "../types/auth";
 

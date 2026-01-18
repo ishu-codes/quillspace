@@ -4,16 +4,16 @@ import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 
 import authConfig from "./auth/index.js";
-import { failure, success } from "./config/response";
+import { failure, success } from "./config/response.js";
 // import { requireAuth } from "./middlewares/auth";
 
-import bookmarksRouter from "./routes/bookmarks";
-import feedRouter from "./routes/feed";
-import draftsRouter from "./routes/drafts";
-import listsRouter from "./routes/lists";
-import postsRouter from "./routes/posts";
-import libraryRouter from "./routes/library";
-import usersRouter from "./routes/users";
+import bookmarksRouter from "./routes/bookmarks/index.js";
+import feedRouter from "./routes/feed/index.js";
+import draftsRouter from "./routes/drafts/index.js";
+import listsRouter from "./routes/lists/index.js";
+import postsRouter from "./routes/posts/index.js";
+import libraryRouter from "./routes/library/index.js";
+import usersRouter from "./routes/users/index.js";
 
 const app = express();
 
