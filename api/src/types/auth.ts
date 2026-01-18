@@ -1,5 +1,5 @@
-import type { APIError } from "better-auth";
-import type { User } from "@prisma/client";
+// import type { APIError } from "better-auth";
+// import type { User } from "@prisma/client";
 
 export type Session = {
   id: string;
@@ -10,6 +10,16 @@ export type Session = {
   token: string;
   ipAddress?: string | null;
   userAgent?: string | null;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  emailVerified: boolean;
+  name: string;
+  image?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type AuthSession = {

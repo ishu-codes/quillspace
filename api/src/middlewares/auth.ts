@@ -10,7 +10,16 @@ export interface AuthRequest extends Request {
 
 export async function requireAuth(req: AuthRequest, res: Response, next: NextFunction) {
   try {
-    const session = await authConfig.api.getSession({ headers: req.headers });
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (typeof value === "string") {
+        headers.append(key, value);
+      } else if (Array.isArray(value)) {
+        value.forEach((v) => headers.append(key, v));
+      }
+    }
+
+    const session = await authConfig.api.getSession({ headers });
     if (!session?.user || !session.session) {
       return failure(res, 401, "Unauthorized");
     }
