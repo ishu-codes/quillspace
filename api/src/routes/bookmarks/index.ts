@@ -1,9 +1,9 @@
 import { Router, type Response } from "express";
 
-import { asyncHandler } from "../../config/handler";
-import { failure, success } from "../../config/response";
-import { createBookmark, deleteBookmark, getBookmarks } from "./controller";
-import { requireAuth, type AuthRequest } from "../../middlewares/auth";
+import { asyncHandler } from "../../config/handler.js";
+import { failure, success } from "../../config/response.js";
+import { createBookmark, deleteBookmark, getBookmarks } from "./controller.js";
+import { requireAuth, type AuthRequest } from "../../middlewares/auth.js";
 
 const router = Router();
 

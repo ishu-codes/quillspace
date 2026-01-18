@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 
 import authConfig from "../auth/index.js";
-import { failure } from "../config/response";
-import type { AuthSession } from "../types/auth";
+import { failure } from "../config/response.js";
+import type { AuthSession } from "../types/auth.js";
 
 export interface AuthRequest extends Request {
   authSession?: AuthSession;

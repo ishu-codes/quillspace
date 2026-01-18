@@ -1,9 +1,9 @@
 import { Router, type Response } from "express";
 
-import { asyncHandler } from "../../config/handler";
-import { failure, success } from "../../config/response";
-import { createDraft, getPostById, publishDraft, updateDraft } from "./controller";
-import { requireAuth, type AuthRequest } from "../../middlewares/auth";
+import { asyncHandler } from "../../config/handler.js";
+import { failure, success } from "../../config/response.js";
+import { createDraft, getPostById, publishDraft, updateDraft } from "./controller.js";
+import { requireAuth, type AuthRequest } from "../../middlewares/auth.js";
 
 const router = Router();
 
@@ -67,8 +67,7 @@ router.get(
     const { postId } = req.params;
 
     const draftPublished = await publishDraft(userId, postId);
-    if (!draftPublished)
-      return failure(res, 404, "Draft not found with given id");
+    if (!draftPublished) return failure(res, 404, "Draft not found with given id");
 
     return success(res, 200, "Draft published successfully!");
   }),

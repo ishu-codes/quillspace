@@ -1,5 +1,5 @@
-import { db } from "../../database";
-import { PostType } from "../../types/post";
+import { db } from "../../database/index.js";
+import { PostType } from "../../types/post.js";
 
 export async function getYourLists(userId: string) {
   const [publishedPostsCount, draftsCount, bookmarkedCount, yourLists] = await Promise.all([

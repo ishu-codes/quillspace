@@ -1,8 +1,8 @@
 import { type BetterAuthPlugin } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 
-import { db } from "../database";
-import type { SignUpResponse } from "../types/auth";
+import { db } from "../database/index.js";
+import type { SignUpResponse } from "../types/auth.js";
 
 export const createUserInfoAfterSignUp = () => {
   return {

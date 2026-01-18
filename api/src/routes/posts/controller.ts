@@ -1,4 +1,4 @@
-import { db } from "../../database";
+import { db } from "../../database/index.js";
 
 export async function getPost(userId: string, postId: string) {
   const bookmarked = await db.bookmark.findFirst({

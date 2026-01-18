@@ -1,4 +1,4 @@
-import { db } from "../../../database";
+import { db } from "../../../database/index.js";
 
 export async function getMyLists(userId: string) {
   const listIds = (
