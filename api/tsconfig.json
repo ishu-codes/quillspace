@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler", // or "node16"
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true, // if using a bundler
+  },
+}

@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 
-import authConfig from "./auth";
+import authConfig from "./auth/index.js";
 import { failure, success } from "./config/response";
 // import { requireAuth } from "./middlewares/auth";
 
