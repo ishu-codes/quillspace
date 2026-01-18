@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { createUserInfoAfterSignUp } from "./auth/plugins";
+import { createUserInfoAfterSignUp } from "./config/authPlugins";
 
 const db = new PrismaClient();
 
