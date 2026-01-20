@@ -37,6 +37,17 @@ try {
       autoSignIn: true,
     },
 
+    session: {
+      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      updateAge: 60 * 60 * 24, // Update every day
+      cookieAttributes: {
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        httpOnly: true,
+        path: "/",
+      },
+    },
+
     //   socialProviders: {
     //     google: {
     //       clientId: process.env.GITHUB_CLIENT_ID || "",
