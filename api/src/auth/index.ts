@@ -1,12 +1,11 @@
-import { APIError, betterAuth, BetterAuthPlugin } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 import dotenv from "dotenv";
 dotenv.config();
 
 import { createUserInfoAfterSignUp } from "../config/authPlugins.js";
 
-// Singleton pattern for Prisma Client (prevents connection issues)
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
@@ -27,8 +26,8 @@ let authConfig: ReturnType<typeof betterAuth>;
 try {
   authConfig = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:1337",
-    trustedOrigins: ["http://localhost:5173"],
-    secret: process.env.JWT_ACCESS_SECRET || "",
+    trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:5173").split(",").map((origin) => origin.trim()),
+    secret: process.env.BETTER_AUTH_SECRET || "",
 
     database: prismaAdapter(db, {
       provider: "postgresql",
