@@ -1,39 +1,22 @@
-import { useEffect, useState } from "react";
-import { authClient } from "@/lib/authClient";
+import { useEffect } from "react";
+import { useShallow } from "zustand/shallow";
 
-type SessionType = {
-	user: {
-		id: string;
-		createdAt: Date;
-		updatedAt: Date;
-		email: string;
-		emailVerified: boolean;
-		name: string;
-		image?: string | null;
-	};
-	session: {
-		id: string;
-		createdAt: Date;
-		updatedAt: Date;
-		userId: string;
-		expiresAt: Date;
-		token: string;
-		ipAddress?: string | null;
-		userAgent?: string | null;
-	};
-} | null;
+import { authClient } from "@/lib/authClient";
+import useSessionStore from "@/store/session";
 
 export function useAuthSession() {
-	const [session, setSession] = useState<SessionType>(null);
+  const [session, setSession] = useSessionStore(useShallow((s) => [s.session, s.setSession]));
 
-	useEffect(() => {
-		async function load() {
-			const { data } = await authClient.getSession();
-			setSession(data ?? null);
-		}
+  useEffect(() => {
+    async function load() {
+      if (!session) {
+        const { data } = await authClient.getSession();
+        setSession(data ?? null);
+      }
+    }
 
-		load();
-	}, []);
+    load();
+  }, []);
 
-	return { session };
+  return { session };
 }

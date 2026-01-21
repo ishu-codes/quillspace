@@ -34,7 +34,7 @@ export default function Posts({
             <>
               {blogs.map((blog) => (
                 <Link to={`${prefixUrl}/${blog.id}`} key={blog.id}>
-                  <PostCard blog={blog} className="w-full" type={postType === "draft" ? "draft" : "post"} />
+                  <PostCard blog={blog} className="w-full" type={postType === "DRAFT" ? "DRAFT" : "POST"} />
                 </Link>
               ))}
             </>

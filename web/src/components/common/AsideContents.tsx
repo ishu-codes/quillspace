@@ -6,7 +6,7 @@ interface SidebarProps {
 }
 
 export function AsideContents({ headings }: SidebarProps) {
-  const [activeId, setActiveId] = useState<string>("");
+  const [_, setActiveId] = useState<string>("");
 
   useEffect(() => {
     const observer = new IntersectionObserver(

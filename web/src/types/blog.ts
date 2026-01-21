@@ -1,7 +1,7 @@
 export type User = {
   id: string;
   name: string;
-  image: string;
+  img: string;
 };
 
 export type Blog = {
@@ -17,7 +17,7 @@ export type Blog = {
 
 export type BlogListItem = {
   id: string;
-  creator: User;
+  creator?: User;
   title: string;
   desc: string;
   isPublic: boolean;
@@ -32,7 +32,7 @@ export type BlogListItem = {
 // };
 
 export type BlogPost = {
-  id: number;
+  id: string;
   authorId: string;
   author?: User;
   title: string;
@@ -45,6 +45,20 @@ export type BlogPost = {
   publishedAt?: string;
   viewsCount: number;
   createdAt: string;
+  updatedAt: string;
+  bookmarked: boolean;
+};
+export type PostCard = {
+  id: string;
+  authorId: string;
+  author?: User;
+  title: string;
+  desc: string;
+  featuredImg: string;
+  slug: string;
+  // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  publishedAt?: string;
+  viewsCount: number;
   updatedAt: string;
   bookmarked: boolean;
 };

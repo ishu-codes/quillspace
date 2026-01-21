@@ -14,12 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface Props {
   blog: BlogPost;
   className?: string;
-  type?: "post" | "draft";
+  type?: "POST" | "DRAFT";
 }
 
-export default function PostCard({ blog, className = "", type: postType = "post" }: Props) {
-  const handleToggleLike = () => {};
-  const handleToggleBookmark = () => {};
+export default function PostCard({ blog, className = "", type: postType = "POST" }: Props) {
+  // const handleToggleLike = () => null;
+  // const handleToggleBookmark = () => null;
 
   const likes = 50 + Math.round(Math.random() * 100);
 
@@ -44,10 +44,10 @@ export default function PostCard({ blog, className = "", type: postType = "post"
       <div className="flex flex-col gap-2">
         <h3 className="font-medium">{blog?.title}</h3>
 
-        {postType === "post" ? (
+        {postType === "POST" ? (
           <div className="flex items-center gap-2">
             <Avatar className="w-9 h-9">
-              <AvatarImage src={blog?.author?.image} alt={blog?.author?.name} />
+              <AvatarImage src={blog?.author?.img} alt={blog?.author?.name} />
               <AvatarFallback>{blog?.author?.name.charAt(0)}</AvatarFallback>
             </Avatar>
 
@@ -56,7 +56,7 @@ export default function PostCard({ blog, className = "", type: postType = "post"
               <p className="flex gap-2">
                 {/*<span>{blog?. ?? 0} likes</span>*/}
                 <span>{likes} likes</span>
-                {postType === "post" ? (
+                {postType === "POST" ? (
                   <>
                     <span>&bull;</span>
                     <span>{dayjs(blog?.publishedAt ?? "").fromNow()}</span>

@@ -136,10 +136,10 @@ export default function Library() {
 
         {/* Tabs */}
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full flex justify-between md:grid md:grid-cols-3">
+          <TabsList className="w-full flex justify-between md:grid md:grid-cols-2">
             <TabsTrigger value="yourLists">Your lists</TabsTrigger>
             <TabsTrigger value="savedLists">Saved lists</TabsTrigger>
-            <TabsTrigger value="readingHistory">Reading history</TabsTrigger>
+            {/*<TabsTrigger value="readingHistory">Reading history</TabsTrigger>*/}
           </TabsList>
 
           <TabsContent value="yourLists">
@@ -153,7 +153,7 @@ export default function Library() {
               <BlogsList list={LISTS.savedLists} />
             </div>
           </TabsContent>
-          <TabsContent value="readingHistory">
+          {/*<TabsContent value="readingHistory">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
               {LISTS.readingHistory.map((blog) => (
                 <Link to={`/posts/${blog.id}`} key={blog.id}>
@@ -161,7 +161,7 @@ export default function Library() {
                 </Link>
               ))}
             </div>
-          </TabsContent>
+          </TabsContent>*/}
         </Tabs>
       </div>
     </div>
@@ -175,7 +175,7 @@ function BlogsList({
 }: {
   list: BlogListItem[];
   routeSuffix?: string;
-  currentUser: boolean;
+  currentUser?: boolean;
 }) {
   const { session } = useAuthSession();
   return (
@@ -197,8 +197,8 @@ function BlogsList({
                   </>
                 ) : (
                   <>
-                    <AvatarImage src={item.creator.image ?? ""} alt={item.creator.name} />
-                    <AvatarFallback>{item.creator.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={item.creator?.img ?? ""} alt={item.creator?.name} />
+                    <AvatarFallback>{item.creator?.name.charAt(0)}</AvatarFallback>
                   </>
                 )}
               </Avatar>
