@@ -1,7 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom";
 
 // import App from "./App";
-import LandingPage from "@/components";
+import LandingPage from "@/components/LandingPage";
 import { AuthLayout, Login, Register, ProtectedLayout, sessionLoader, Logout } from "@/components/auth";
 import { Home, Library, Profile, Settings, DashboardLayout } from "@/components/dashboard";
 import { Draft, DraftLayout } from "@/components/drafts";
