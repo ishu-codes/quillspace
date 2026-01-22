@@ -40,7 +40,7 @@ export default function ProfileContent({ userId }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex gap-4">
               <Avatar className="h-12 w-12">
-                <AvatarImage src={userInfo?.user.image ?? "null"} alt={"profile"} />
+                <AvatarImage src={userInfo?.user.image!} alt={"profile"} />
                 <AvatarFallback>{userInfo?.user.name.charAt(0)}</AvatarFallback>
               </Avatar>
 
@@ -137,7 +137,7 @@ function Posts({ userId }: PostsProps) {
 function Followers({ userId }: { userId: string }) {
   const { data: followers, isLoading } = useUserFollowers(userId);
 
-  if (!followers) return <ErrorPage message="No followers" />;
+  if (!followers || followers.length == 0) return <ErrorPage message="No followers" />;
   if (isLoading) return <Skeleton className="w-full h-20" />;
 
   return (
@@ -154,7 +154,7 @@ function Followers({ userId }: { userId: string }) {
 function Following({ userId }: { userId: string }) {
   const { data: following, isLoading } = useUserFollowing(userId);
 
-  if (!following) return <ErrorPage message="No following" />;
+  if (!following || following.length == 0) return <ErrorPage message="No following" />;
   if (isLoading) return <Skeleton className="w-full h-20" />;
 
   return (
@@ -177,7 +177,7 @@ function FollowerCard({ user, type }: FollowerCardProps) {
     <div className="flex justify-between items-center">
       <Link to={`/users/${user.id}`} className="flex gap-4">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={user.image || ""} alt={"profile"} />
+          <AvatarImage src={user.image} alt={"profile"} />
           <AvatarFallback className="border-1">{user.name.charAt(0)}</AvatarFallback>
         </Avatar>
 
