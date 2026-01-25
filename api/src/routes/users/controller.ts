@@ -1,7 +1,7 @@
 import { db } from "../../database/index.js";
 
-export async function getUserInfo(userId: string) {
-  const [userInfo, postsCount, followersCount, followingCount] = await Promise.all([
+export async function getUserInfo(userId: string, originalUserId: string) {
+  const [userInfo, postsCount, followersCount, followingCount, followedByYou] = await Promise.all([
     // User info
     db.userInfo.findUnique({
       where: {
@@ -42,6 +42,16 @@ export async function getUserInfo(userId: string) {
         followerId: userId,
       },
     }),
+
+    // FollowedByYou
+    db.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: originalUserId,
+          followingId: userId,
+        },
+      },
+    }),
   ]);
   if (!userInfo) return false;
 
@@ -55,6 +65,7 @@ export async function getUserInfo(userId: string) {
     postsCount,
     followersCount,
     followingCount,
+    followedByYou: Boolean(followedByYou),
   };
 }
 
@@ -82,6 +93,11 @@ export async function getUserPosts(userId: string) {
   });
 }
 
+/**
+ *
+ * @param userId
+ * @returns users who follow the current user
+ */
 export async function getFollowers(userId: string) {
   const followers = await db.follow.findMany({
     where: {
@@ -110,6 +126,12 @@ export async function getFollowers(userId: string) {
     username: f.follower.userInfo?.username,
   }));
 }
+
+/**
+ *
+ * @param userId
+ * @returns users whom the current user is following
+ */
 export async function getFollowings(userId: string) {
   const followings = await db.follow.findMany({
     where: {
@@ -137,4 +159,59 @@ export async function getFollowings(userId: string) {
     image: f.following.image,
     username: f.following.userInfo?.username,
   }));
+}
+
+/**
+ *
+ * @param followerId id of the user who follows the other
+ * @param followingId id of the user who is being followed
+ * @returns
+ */
+export async function follow(followerId: string, followingId: string) {
+  const [follower, following] = await Promise.all([
+    db.user.findUnique({ where: { id: followerId } }),
+    db.user.findUnique({ where: { id: followingId } }),
+  ]);
+  if (!(following && follower)) return false;
+
+  try {
+    await db.follow.create({
+      data: {
+        followerId: follower.id,
+        followingId: following.id,
+      },
+    });
+  } catch {
+    return false;
+  }
+  return following;
+}
+
+/**
+ *
+ * @param followerId id of the user who follows the other
+ * @param followingId id of the user who is being followed
+ * @returns
+ */
+export async function unfollow(followerId: string, followingId: string) {
+  const [follower, following] = await Promise.all([
+    db.user.findUnique({ where: { id: followerId } }),
+    db.user.findUnique({ where: { id: followingId } }),
+  ]);
+  if (!(following && follower)) return false;
+
+  try {
+    await db.follow.delete({
+      where: {
+        followerId_followingId: {
+          followerId: follower.id,
+          followingId: following.id,
+        },
+      },
+    });
+  } catch {
+    return false;
+  }
+
+  return following;
 }

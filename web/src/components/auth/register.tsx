@@ -2,7 +2,7 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod/v4";
 
@@ -165,6 +165,18 @@ export default function Register() {
                 >
                     {isPending ? "Creating account..." : "Create account"}
                 </Button>
+
+                <div className="mt-4 text-center">
+                    <p className="text-sm text-muted-foreground">
+                        Already have an account?{" "}
+                        <Link
+                            to="/auth/login"
+                            className="text-foreground font-bold hover:underline"
+                        >
+                            Sign in
+                        </Link>
+                    </p>
+                </div>
             </form>
         </Form>
     );

@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
 
 import Logo from "@/components/common/Logo";
-import { Navigate, Outlet, useLoaderData } from "react-router-dom";
+import { Navigate, Outlet, useLoaderData, useLocation } from "react-router-dom";
 
-interface Props {
-    title: string;
-    subtitle: string;
-    // children: ReactNode;
-}
-
-export default function AuthLayout({ title, subtitle }: Props) {
+export default function AuthLayout() {
     const { session } = useLoaderData();
+    const location = useLocation();
+
     if (session) return <Navigate to={"/dashboard/home"} replace />;
+
+    const isLogin = location.pathname.includes("login");
+    const title = isLogin ? "Welcome back" : "Create account";
+    const subtitle = isLogin
+        ? "Enter your credentials to access your writing space."
+        : "Join a community of deep thinkers and quality writers.";
 
     return (
         <div className="min-h-screen w-full bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">

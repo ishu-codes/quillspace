@@ -10,6 +10,7 @@ export type UserProfileInfo = {
   postsCount: number;
   followersCount: number;
   followingCount: number;
+  followedByYou?: boolean;
 };
 
 export type Follower = {
