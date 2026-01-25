@@ -14,6 +14,7 @@ import listsRouter from "./routes/lists/index.js";
 import postsRouter from "./routes/posts/index.js";
 import libraryRouter from "./routes/library/index.js";
 import usersRouter from "./routes/users/index.js";
+// import uploadRouter from "./routes/upload/index.js";
 
 const app = express();
 
@@ -57,5 +58,6 @@ app.use("/api/lists", listsRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/library", libraryRouter);
 app.use("/api/users", usersRouter);
+// app.use("/api/upload", uploadRouter);
 
 export default app;
