@@ -1,11 +1,15 @@
-import { Outlet } from "react-router-dom";
+import Footer from "@/components/common/Footer";
 import Navbar from "@/components/navbar";
+import { Outlet } from "react-router-dom";
 
 export default function PostLayout() {
-	return (
-		<div className="flex flex-col">
-			<Navbar />
-			<Outlet />
-		</div>
-	);
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
 }
