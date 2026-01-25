@@ -1,26 +1,28 @@
+import { BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LayoutGridIcon } from "lucide-react";
 
 interface Props {
     className?: string;
+    to?: string;
 }
 
-export default function Logo({ className }: Props) {
+export default function Logo({ className, to = "/dashboard/home" }: Props) {
     const handleClick = () => {
-        console.log("setWorkspace(undefined)");
-        console.log("setProject(undefined)");
+        // Handle workspace resets if needed
     };
 
     return (
         <Link
             onClick={handleClick}
-            to="/dashboard/home"
-            className={`flex items-center gap-2 ${className}`}
+            to={to}
+            className={`flex items-center gap-2.5 ${className}`}
         >
-            <div className="p-1.5">
-                <LayoutGridIcon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <div className="w-9 h-9 bg-foreground rounded-full flex items-center justify-center transition-transform hover:rotate-12">
+                <BookOpen className="w-5 h-5 text-background" />
             </div>
-            <span className="text-lg text-zinc-900 dark:text-white font-semibold">QuillSpace</span>
+            <span className="text-xl font-serif font-bold tracking-tight text-foreground">
+                QuillSpace
+            </span>
         </Link>
     );
 }

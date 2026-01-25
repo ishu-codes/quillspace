@@ -1,201 +1,256 @@
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import PostCard from "@/components/common/PostCard";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useUserFollowers, useUserFollowing, useUserInfo, useUserPosts } from "@/fetchers/userInfo";
-
-import ErrorPage from "./Error";
-import { Link } from "react-router-dom";
+import {
+    useUserFollowers,
+    useUserFollowing,
+    useUserInfo,
+    useUserPosts,
+} from "@/fetchers/userInfo";
 import type { Follower } from "@/types/userInfo";
 
+import ErrorPage from "./Error";
+
 interface Props {
-  userId: string;
-}
-
-export default function ProfileContent({ userId }: Props) {
-  const [currentTab, setCurrentTab] = useState("posts");
-  const { data: userInfo, isLoading, isError } = useUserInfo(userId);
-
-  if (isLoading) {
-    return (
-      <div className="w-full">
-        <Skeleton className="w-full h-60" />
-      </div>
-    );
-  }
-
-  if (!userInfo || isError) {
-    return <ErrorPage />;
-  }
-
-  return (
-    <div className="max-w-4xl flex flex-col gap-8 mx-auto px-4 pt-4">
-      <Card>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={userInfo?.user.image!} alt={"profile"} />
-                <AvatarFallback>{userInfo?.user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-
-              <div className="flex flex-col">
-                <div className="flex flex-col">
-                  <h3 className="text-xl font-semibold">{userInfo?.user.name}</h3>
-                  <p className="text-muted-foreground text-sm">{userInfo?.user.username}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Bio */}
-            <div className="text-muted-foreground">{userInfo?.user.bio}</div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { title: "Posts", value: userInfo.postsCount, action: () => setCurrentTab("posts") },
-              { title: "Followers", value: userInfo.followersCount, action: () => setCurrentTab("followers") },
-              { title: "Following", value: userInfo.followingCount, action: () => setCurrentTab("following") },
-            ].map((item) => (
-              <Button variant={"ghost"} className="h-20! flex flex-col gap-1" onClick={item.action} key={item.title}>
-                <p className="text-muted-foreground">{item.title}</p>
-                <h4 className="text-xl font-semibold">{item.value}</h4>
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Tabs */}
-      <Tabs className="w-full sticky top-8" value={currentTab} onValueChange={(val) => setCurrentTab(val)}>
-        <TabsList className="w-full flex justify-between md:grid md:grid-cols-3">
-          <TabsTrigger value="posts">Posts</TabsTrigger>
-          <TabsTrigger value="followers">Followers</TabsTrigger>
-          <TabsTrigger value="following">Following</TabsTrigger>
-        </TabsList>
-
-        {/* Posts Tab */}
-        <TabsContent value="posts" className="space-y-4">
-          <Posts userId={userId} />
-        </TabsContent>
-
-        {/* Followers Tab */}
-        <TabsContent value="followers" className="space-y-4">
-          <Followers {...{ userId }} />
-        </TabsContent>
-
-        {/* Following Tab */}
-        <TabsContent value="following" className="space-y-4">
-          <Following {...{ userId }} />
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+    userId: string;
 }
 
 interface PostsProps {
-  userId: string;
-}
-function Posts({ userId }: PostsProps) {
-  const { data: userPosts, isLoading, isError } = useUserPosts(userId);
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        {Array.from({ length: 9 }, (_, i) => (
-          <Skeleton className="w-full h-40" key={i} />
-        ))}
-      </div>
-    );
-  }
-
-  if (!userPosts || userPosts.length == 0 || isError) {
-    return <ErrorPage message="No posts found" />;
-  }
-  if (!Array.isArray(userPosts)) {
-    console.error("Expected array, got:", userPosts);
-    return <ErrorPage message="Invalid posts response" />;
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3">
-      {userPosts?.map((post) => (
-        <Link to={`/posts/${post.id}`} key={post.id}>
-          <PostCard blog={post} className="w-full" />
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function Followers({ userId }: { userId: string }) {
-  const { data: followers, isLoading } = useUserFollowers(userId);
-
-  if (!followers || followers.length == 0) return <ErrorPage message="No followers" />;
-  if (isLoading) return <Skeleton className="w-full h-20" />;
-
-  return (
-    <Card>
-      <CardContent className="flex flex-col gap-4">
-        {followers.map((item) => (
-          <FollowerCard user={item} type="follower" key={item.id} />
-        ))}
-      </CardContent>
-    </Card>
-  );
-}
-
-function Following({ userId }: { userId: string }) {
-  const { data: following, isLoading } = useUserFollowing(userId);
-
-  if (!following || following.length == 0) return <ErrorPage message="No following" />;
-  if (isLoading) return <Skeleton className="w-full h-20" />;
-
-  return (
-    <Card>
-      <CardContent className="flex flex-col gap-4">
-        {following.map((item) => (
-          <FollowerCard user={item} type="following" key={item.id} />
-        ))}
-      </CardContent>
-    </Card>
-  );
+    userId: string;
 }
 
 interface FollowerCardProps {
-  user: Follower;
-  type: "follower" | "following";
+    user: Follower;
+    type: "follower" | "following";
 }
-function FollowerCard({ user, type }: FollowerCardProps) {
-  return (
-    <div className="flex justify-between items-center">
-      <Link to={`/users/${user.id}`} className="flex gap-4">
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={user.image} alt={"profile"} />
-          <AvatarFallback className="border-1">{user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
 
-        <div className="flex flex-col">
-          <div className="flex flex-col">
-            <h3 className="font-semibold">{user.name}</h3>
-            <p className="text-muted-foreground text-sm -mt-1">{user.username}</p>
-          </div>
+export default function ProfileContent({ userId }: Props) {
+    const [currentTab, setCurrentTab] = useState("posts");
+    const { data: userInfo, isLoading, isError } = useUserInfo(userId);
+
+    if (isLoading) {
+        return (
+            <div className="max-w-4xl mx-auto px-6 py-12">
+                <Skeleton className="w-full h-80 rounded-[2rem]" />
+            </div>
+        );
+    }
+
+    if (!userInfo || isError) {
+        return <ErrorPage />;
+    }
+
+    return (
+        <div className="max-w-5xl mx-auto px-6 py-12">
+            {/* Profile Header */}
+            <div className="flex flex-col md:flex-row gap-12 items-start mb-16">
+                <div className="relative group">
+                    <Avatar className="h-40 w-40 ring-4 ring-border/50">
+                        <AvatarImage
+                            src={userInfo?.user.image!}
+                            alt={"profile"}
+                        />
+                        <AvatarFallback className="text-4xl font-serif font-bold">
+                            {userInfo?.user.name.charAt(0)}
+                        </AvatarFallback>
+                    </Avatar>
+                </div>
+
+                <div className="flex-1 space-y-6">
+                    <div>
+                        <h1 className="text-6xl font-serif font-bold tracking-tight mb-2">
+                            {userInfo?.user.name}
+                        </h1>
+                        <p className="text-xl text-muted-foreground font-medium">
+                            @{userInfo?.user.username}
+                        </p>
+                    </div>
+
+                    <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                        {userInfo?.user.bio ||
+                            "No bio yet. This writer prefers to let their stories speak for themselves."}
+                    </p>
+
+                    <div className="flex flex-wrap gap-8 pt-4">
+                        {[
+                            {
+                                title: "Posts",
+                                value: userInfo.postsCount,
+                                action: () => setCurrentTab("posts"),
+                            },
+                            {
+                                title: "Followers",
+                                value: userInfo.followersCount,
+                                action: () => setCurrentTab("followers"),
+                            },
+                            {
+                                title: "Following",
+                                value: userInfo.followingCount,
+                                action: () => setCurrentTab("following"),
+                            },
+                        ].map((item) => (
+                            <button
+                                key={item.title}
+                                onClick={item.action}
+                                className="group text-left"
+                            >
+                                <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-foreground transition-colors">
+                                    {item.title}
+                                </p>
+                                <h4 className="text-3xl font-serif font-bold">
+                                    {item.value}
+                                </h4>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Tabs */}
+            <Tabs
+                className="w-full"
+                value={currentTab}
+                onValueChange={(val) => setCurrentTab(val)}
+            >
+                <TabsList className="w-full h-auto p-0 bg-transparent border-b border-border mb-12 flex justify-start gap-8 rounded-none">
+                    <TabsTrigger
+                        value="posts"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent px-0 py-4 text-sm font-bold uppercase tracking-widest"
+                    >
+                        Posts
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="followers"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent px-0 py-4 text-sm font-bold uppercase tracking-widest"
+                    >
+                        Followers
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="following"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent px-0 py-4 text-sm font-bold uppercase tracking-widest"
+                    >
+                        Following
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="posts">
+                    <Posts userId={userId} />
+                </TabsContent>
+
+                <TabsContent value="followers">
+                    <Followers userId={userId} />
+                </TabsContent>
+
+                <TabsContent value="following">
+                    <Following userId={userId} />
+                </TabsContent>
+            </Tabs>
         </div>
-      </Link>
+    );
+}
 
-      {/*{type === "follower" ? (
-        <Button size={"sm"}>Follow</Button>
-      ) : (
-        <Button size={"sm"} variant={"outline"}>
-          Unfollow
-        </Button>
-      )}*/}
-    </div>
-  );
+function Posts({ userId }: PostsProps) {
+    const { data: userPosts, isLoading, isError } = useUserPosts(userId);
+
+    if (isLoading) {
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }, (_, i) => (
+                    <Skeleton className="w-full h-64 rounded-3xl" key={i} />
+                ))}
+            </div>
+        );
+    }
+
+    if (!userPosts || userPosts.length === 0 || isError) {
+        return (
+            <div className="py-20 text-center text-muted-foreground italic">
+                No stories published yet.
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {userPosts?.map((post) => (
+                <Link to={`/posts/${post.id}`} key={post.id}>
+                    <PostCard blog={post} className="h-full" />
+                </Link>
+            ))}
+        </div>
+    );
+}
+
+function Followers({ userId }: { userId: string }) {
+    const { data: followers, isLoading } = useUserFollowers(userId);
+
+    if (isLoading) return <Skeleton className="w-full h-20 rounded-2xl" />;
+    if (!followers || followers.length === 0)
+        return (
+            <div className="py-20 text-center text-muted-foreground italic">
+                No followers yet.
+            </div>
+        );
+
+    return (
+        <div className="grid md:grid-cols-2 gap-4">
+            {followers.map((item) => (
+                <FollowerCard user={item} type="follower" key={item.id} />
+            ))}
+        </div>
+    );
+}
+
+function Following({ userId }: { userId: string }) {
+    const { data: following, isLoading } = useUserFollowing(userId);
+
+    if (isLoading) return <Skeleton className="w-full h-20 rounded-2xl" />;
+    if (!following || following.length === 0)
+        return (
+            <div className="py-20 text-center text-muted-foreground italic">
+                Not following anyone yet.
+            </div>
+        );
+
+    return (
+        <div className="grid md:grid-cols-2 gap-4">
+            {following.map((item) => (
+                <FollowerCard user={item} type="following" key={item.id} />
+            ))}
+        </div>
+    );
+}
+
+function FollowerCard({ user }: FollowerCardProps) {
+    return (
+        <Link
+            to={`/users/${user.id}`}
+            className="flex items-center justify-between p-4 rounded-2xl border border-border/50 hover:border-foreground/20 hover:bg-muted/30 transition-all group"
+        >
+            <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 ring-2 ring-background">
+                    <AvatarImage src={user.image} alt={"profile"} />
+                    <AvatarFallback className="font-bold">
+                        {user.name.charAt(0)}
+                    </AvatarFallback>
+                </Avatar>
+
+                <div>
+                    <h3 className="font-bold leading-none mb-1 group-hover:underline">
+                        {user.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-none">
+                        @{user.username}
+                    </p>
+                </div>
+            </div>
+
+            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
+        </Link>
+    );
 }

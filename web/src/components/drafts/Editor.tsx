@@ -1,485 +1,364 @@
 import { cn } from "@/lib/utils";
 
-import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
-
-import { Table } from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableHeader from "@tiptap/extension-table-header";
-import TableCell from "@tiptap/extension-table-cell";
+import {
+    EditorContent,
+    type Editor as TiptapEditor,
+    useEditor,
+} from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 
 import {
-  ArrowDownFromLineIcon,
-  ArrowLeftFromLineIcon,
-  ArrowRightFromLineIcon,
-  ArrowUpFromLineIcon,
-  Bold,
-  CheckSquare,
-  Code,
-  Columns3Icon,
-  Grid2X2PlusIcon,
-  Grid2X2XIcon,
-  HighlighterIcon,
-  Italic,
-  Link2Icon,
-  List,
-  ListOrdered,
-  Quote,
-  Rows3Icon,
-  SeparatorHorizontalIcon,
-  Strikethrough,
-  TableIcon,
-  TypeIcon,
+    Bold,
+    Code,
+    HighlighterIcon,
+    Italic,
+    Link2Icon,
+    List,
+    ListOrdered,
+    Quote,
+    TypeIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 import { Markdown } from "tiptap-markdown";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "../ui/hover-card";
 
 interface EditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
 }
 
 const TEXT_OPTIONS = [
-  {
-    label: "Normal text",
-    value: "paragraph",
-    icon: <TypeIcon className="w-4 h-4" />,
-  },
-  {
-    label: "Heading 1",
-    value: "h1",
-    icon: <span className="text-sm">H1</span>,
-  },
-  {
-    label: "Heading 2",
-    value: "h2",
-    icon: <span className="text-sm">H2</span>,
-  },
-];
-const TABLE_ADD_OPTIONS = [
-  {
-    label: "Insert row above",
-    value: "above",
-    icon: ArrowUpFromLineIcon,
-  },
-  {
-    label: "Insert row below",
-    value: "below",
-    icon: ArrowDownFromLineIcon,
-  },
-  {
-    label: "Insert column left",
-    value: "left",
-    icon: ArrowLeftFromLineIcon,
-  },
-  {
-    label: "Insert column right",
-    value: "right",
-    icon: ArrowRightFromLineIcon,
-  },
+    {
+        label: "Normal text",
+        value: "paragraph",
+        icon: <TypeIcon className="w-4 h-4" />,
+    },
+    {
+        label: "Heading 1",
+        value: "h1",
+        icon: <span className="text-sm font-bold">H1</span>,
+    },
+    {
+        label: "Heading 2",
+        value: "h2",
+        icon: <span className="text-sm font-bold">H2</span>,
+    },
 ];
 
-export default function Editor({ value, onChange, placeholder = "Write something..." }: EditorProps) {
-  const editor = useEditor({
-    editorProps: {
-      attributes: {
-        class: "h-full flex-1",
-      },
-    },
-    parseOptions: {
-      preserveWhitespace: "full",
-    },
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [1, 2],
-          HTMLAttributes: {
-            class: "text-zinc-900 dark:text-zinc-100",
-          },
+export default function Editor({
+    value,
+    onChange,
+    placeholder = "Write something...",
+}: EditorProps) {
+    const editor = useEditor({
+        editorProps: {
+            attributes: {
+                class: "h-full flex-1 focus:outline-none",
+            },
         },
-        codeBlock: {
-          HTMLAttributes: {
-            class:
-              "block rounded-md bg-zinc-100 dark:bg-zinc-800/30 p-4 font-mono text-sm text-zinc-900 dark:text-zinc-200 my-4",
-          },
+        parseOptions: {
+            preserveWhitespace: "full",
         },
-        blockquote: {
-          HTMLAttributes: {
-            class: "bg-primary/5 text-muted-foreground italic border-l-4 border-primary py-2 pl-4",
-          },
+        extensions: [
+            StarterKit.configure({
+                heading: {
+                    levels: [1, 2],
+                },
+                codeBlock: {
+                    HTMLAttributes: {
+                        class: "block rounded-2xl bg-muted p-6 font-mono text-sm my-8",
+                    },
+                },
+                blockquote: {
+                    HTMLAttributes: {
+                        class: "text-muted-foreground italic border-l-4 border-foreground/20 py-2 pl-6 my-8",
+                    },
+                },
+                orderedList: {
+                    HTMLAttributes: {
+                        class: "list-decimal pl-6 my-6",
+                    },
+                },
+                bulletList: {
+                    HTMLAttributes: {
+                        class: "list-disc pl-6 my-6",
+                    },
+                },
+                link: false,
+            }),
+            Link.configure({
+                openOnClick: true,
+                autolink: true,
+                defaultProtocol: "https",
+                HTMLAttributes: {
+                    class: "text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-all cursor-pointer",
+                },
+            }),
+            Highlight.configure({
+                HTMLAttributes: {
+                    class: "bg-foreground/10 rounded-sm px-1",
+                },
+            }),
+            TaskList.configure({
+                HTMLAttributes: {
+                    class: "not-prose pl-2",
+                },
+            }),
+            TaskItem.configure({
+                nested: true,
+                HTMLAttributes: {
+                    class: "flex gap-2 items-start",
+                },
+            }),
+            Markdown.configure({
+                html: true,
+                tightLists: true,
+                linkify: true,
+                breaks: true,
+                transformPastedText: true,
+                transformCopiedText: true,
+            }),
+            Placeholder.configure({
+                placeholder,
+            }),
+        ],
+        content: value,
+        onUpdate: ({ editor }: { editor: TiptapEditor }) => {
+            // @ts-ignore
+            const markdown = editor.storage.markdown.getMarkdown();
+            onChange(markdown);
         },
-        orderedList: {
-          HTMLAttributes: {
-            class: "list-decimal pl-6",
-          },
-        },
-        bulletList: {
-          HTMLAttributes: {
-            class: "list-disc pl-6",
-          },
-        },
-        link: false,
-      }),
-      Link.configure({
-        openOnClick: true,
-        autolink: true,
-        defaultProtocol: "https",
-        HTMLAttributes: {
-          class:
-            "text-indigo-600 dark:text-indigo-400 underline cursor-pointer hover:text-indigo-800 dark:hover:text-indigo-300",
-        },
-      }),
-      Highlight.configure({
-        HTMLAttributes: {
-          class: "bg-indigo-100 text-indigo-900 dark:bg-indigo-500/20 dark:text-indigo-300 rounded-sm px-1",
-        },
-      }),
-      TaskList.configure({
-        HTMLAttributes: {
-          class: "not-prose pl-2",
-        },
-      }),
-      TaskItem.configure({
-        nested: true,
-        HTMLAttributes: {
-          class: "flex gap-2 items-start",
-        },
-      }),
-      Markdown.configure({
-        html: true,
-        tightLists: true,
-        linkify: true,
-        breaks: true,
-        transformPastedText: true,
-        transformCopiedText: true,
-      }),
-      Placeholder.configure({
-        placeholder,
-      }),
-      Table.configure({
-        resizable: true,
-        HTMLAttributes: {
-          class: "border-2",
-        },
-      }),
-      TableRow,
-      TableHeader.configure({
-        HTMLAttributes: {
-          class: "min-w-20 px-3 py-2 border-2 border-red",
-        },
-      }),
-      TableCell.configure({
-        HTMLAttributes: {
-          class: "min-w-20 px-3 py-2 border-2 border-red",
-        },
-      }),
-    ],
-    onSelectionUpdate: ({ editor }) => {
-      editor.commands.focus();
-    },
-    content: value,
-    onUpdate: ({ editor }: { editor: TiptapEditor }) => {
-      const markdown = editor.storage.markdown.getMarkdown();
-      onChange(markdown);
-    },
-  });
+    });
 
-  useEffect(() => {
-    if (editor && value !== editor.storage.markdown.getMarkdown()) {
-      editor.commands.setContent(value);
+    useEffect(() => {
+        // @ts-ignore
+        if (editor && value !== editor.storage.markdown.getMarkdown()) {
+            editor.commands.setContent(value);
+        }
+    }, [value, editor]);
+
+    const getCurrentTextStyle = () => {
+        if (!editor) return TEXT_OPTIONS[0];
+        if (editor.isActive("heading", { level: 1 })) return TEXT_OPTIONS[1];
+        if (editor.isActive("heading", { level: 2 })) return TEXT_OPTIONS[2];
+        return TEXT_OPTIONS[0];
+    };
+
+    const handleSetText = (value: string) => {
+        if (!editor) return;
+        switch (value) {
+            case "paragraph":
+                editor.chain().focus().setParagraph().run();
+                break;
+
+            case "h1":
+                editor.chain().focus().toggleHeading({ level: 1 }).run();
+                break;
+
+            case "h2":
+                editor.chain().focus().toggleHeading({ level: 2 }).run();
+                break;
+        }
+    };
+
+    if (!editor) {
+        return null;
     }
-  }, [value, editor]);
 
-  const getCurrentTextStyle = () => {
-    if (!editor) return TEXT_OPTIONS[0];
-    if (editor.isActive("heading", { level: 1 })) return TEXT_OPTIONS[1];
-    if (editor.isActive("heading", { level: 2 })) return TEXT_OPTIONS[2];
-    // if (editor.isActive("heading", { level: 3 })) return TEXT_OPTIONS[3];
-    return TEXT_OPTIONS[0];
-  };
+    return (
+        <div className="w-full h-full flex flex-col bg-background">
+            <div className="w-full flex items-center justify-between px-6 py-3 border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-20">
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                    <HoverCard openDelay={0} closeDelay={0}>
+                        <HoverCardTrigger asChild>
+                            <button
+                                type="button"
+                                className="h-10 px-4 rounded-xl flex items-center gap-2 hover:bg-muted transition-colors text-sm font-bold uppercase tracking-widest"
+                            >
+                                {getCurrentTextStyle().label}
+                            </button>
+                        </HoverCardTrigger>
+                        <HoverCardContent
+                            className="w-48 p-2 flex flex-col gap-1 rounded-2xl shadow-2xl border-border/50 bg-background"
+                            align="start"
+                        >
+                            {TEXT_OPTIONS.map((option) => (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() => handleSetText(option.value)}
+                                    className={cn(
+                                        "flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm font-medium transition-colors",
+                                        editor.isActive(
+                                            option.value === "paragraph"
+                                                ? "paragraph"
+                                                : "heading",
+                                            option.value !== "paragraph"
+                                                ? {
+                                                      level: Number(
+                                                          option.value.slice(1),
+                                                      ),
+                                                  }
+                                                : {},
+                                        )
+                                            ? "bg-foreground text-background"
+                                            : "hover:bg-muted",
+                                    )}
+                                >
+                                    {option.icon}
+                                    {option.label}
+                                </button>
+                            ))}
+                        </HoverCardContent>
+                    </HoverCard>
 
-  const handleSetText = (value: string) => {
-    switch (value) {
-      case "paragraph":
-        editor.chain().focus().setParagraph().run();
-        break;
+                    <div className="w-px h-6 bg-border mx-2" />
 
-      case "h1":
-        editor.chain().focus().toggleHeading({ level: 1 }).run();
-        break;
+                    <div className="flex items-center gap-0.5">
+                        {[
+                            {
+                                icon: Bold,
+                                action: () =>
+                                    editor.chain().focus().toggleBold().run(),
+                                active: "bold",
+                            },
+                            {
+                                icon: Italic,
+                                action: () =>
+                                    editor.chain().focus().toggleItalic().run(),
+                                active: "italic",
+                            },
+                            // @ts-ignore
+                            {
+                                icon: HighlighterIcon,
+                                action: () =>
+                                    editor
+                                        .chain()
+                                        .focus()
+                                        .toggleHighlight()
+                                        .run(),
+                                active: "highlight",
+                            },
+                        ].map((tool, i) => (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={tool.action}
+                                className={cn(
+                                    "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
+                                    editor.isActive(tool.active)
+                                        ? "bg-foreground text-background scale-95 shadow-lg shadow-foreground/10"
+                                        : "hover:bg-muted text-muted-foreground hover:text-foreground",
+                                )}
+                            >
+                                <tool.icon className="w-4 h-4" />
+                            </button>
+                        ))}
+                    </div>
 
-      case "h2":
-        editor.chain().focus().toggleHeading({ level: 2 }).run();
-        break;
-    }
-  };
+                    <div className="w-px h-6 bg-border mx-2" />
 
-  const handleTableInsert = (value: string) => {
-    switch (value) {
-      case "above":
-        editor.chain().focus().addRowBefore().run();
-        break;
-      case "below":
-        editor.chain().focus().addRowAfter().run();
-        break;
-      case "right":
-        editor.chain().focus().addColumnAfter().run();
-        break;
-      case "left":
-        editor.chain().focus().addColumnBefore().run();
-        break;
-    }
-  };
+                    <div className="flex items-center gap-0.5">
+                        {[
+                            {
+                                icon: List,
+                                action: () =>
+                                    editor
+                                        .chain()
+                                        .focus()
+                                        .toggleBulletList()
+                                        .run(),
+                                active: "bulletList",
+                            },
+                            {
+                                icon: ListOrdered,
+                                action: () =>
+                                    editor
+                                        .chain()
+                                        .focus()
+                                        .toggleOrderedList()
+                                        .run(),
+                                active: "orderedList",
+                            },
+                            {
+                                icon: Quote,
+                                action: () =>
+                                    editor
+                                        .chain()
+                                        .focus()
+                                        .toggleBlockquote()
+                                        .run(),
+                                active: "blockquote",
+                            },
+                            {
+                                icon: Code,
+                                action: () =>
+                                    editor.chain().focus().toggleCode().run(),
+                                active: "code",
+                            },
+                        ].map((tool, i) => (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={tool.action}
+                                className={cn(
+                                    "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
+                                    editor.isActive(tool.active)
+                                        ? "bg-foreground text-background scale-95 shadow-lg shadow-foreground/10"
+                                        : "hover:bg-muted text-muted-foreground hover:text-foreground",
+                                )}
+                            >
+                                <tool.icon className="w-4 h-4" />
+                            </button>
+                        ))}
+                    </div>
 
-  if (!editor) {
-    return null;
-  }
+                    <div className="w-px h-6 bg-border mx-2" />
 
-  return (
-    <div className="w-full h-full prose prose-zinc dark:prose-invert max-w-none [&_.is-editor-empty]:text-zinc-500 [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 flex flex-col">
-      <div className="w-full whitespace-nowrap overflow-x-auto flex flex-wrap gap-1 p-3 border-b border-zinc-200 dark:border-zinc-800 flex-shrink-0 bg-zinc-100 dark:bg-zinc-800/30 static top-16 md:rounded-2xl">
-        <div className="flex whitespace-nowrap">
-          <HoverCard>
-            <button
-              type="button"
-              className={cn("p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800")}
-              onClick={(e) => e.preventDefault()}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const url = window.prompt("Enter URL:");
+                            if (url)
+                                editor
+                                    .chain()
+                                    .focus()
+                                    .setLink({ href: url })
+                                    .run();
+                        }}
+                        className={cn(
+                            "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
+                            editor.isActive("link")
+                                ? "bg-foreground text-background"
+                                : "hover:bg-muted text-muted-foreground",
+                        )}
+                    >
+                        <Link2Icon className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            <div
+                className="flex-1 overflow-y-auto cursor-text selection:bg-foreground selection:text-background"
+                onClick={() => editor.chain().focus().run()}
             >
-              <HoverCardTrigger className="p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                {/* < className="w-4 h-4 text-zinc-600 dark:text-zinc-400" /> */}
-                {getCurrentTextStyle().icon}
-                <span className="text-sm">{getCurrentTextStyle().label}</span>
-              </HoverCardTrigger>
-            </button>
-            <HoverCardContent className="flex flex-col bg-zinc-100 dark:bg-zinc-800">
-              {TEXT_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => handleSetText(option.value)}
-                  className={cn(
-                    "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                  )}
-                >
-                  {option.icon}
-                  <span className="text-sm">{option.label}</span>
-                </button>
-              ))}
-            </HoverCardContent>
-          </HoverCard>
-          <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("bold") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Bold className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("italic") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Italic className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("strike") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Strikethrough className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleHighlight().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("highlight") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <HighlighterIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("bulletList") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <List className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("orderedList") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <ListOrdered className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleTaskList().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("taskList") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <CheckSquare className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 2 }).run()}
-            className={cn("p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800")}
-          >
-            <TableIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-
-          <HoverCard>
-            <button
-              type="button"
-              className={cn("p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800")}
-              onClick={(e) => e.preventDefault()}
-            >
-              <HoverCardTrigger className="">
-                <Grid2X2PlusIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-              </HoverCardTrigger>
-            </button>
-            <HoverCardContent className="flex flex-col bg-zinc-100 dark:bg-zinc-800">
-              {TABLE_ADD_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => handleTableInsert(option.value)}
-                  className={cn(
-                    "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                  )}
-                >
-                  <option.icon className="w-4 h-4" />
-                  <span className="text-sm">{option.label}</span>
-                </button>
-              ))}
-            </HoverCardContent>
-          </HoverCard>
-          <HoverCard>
-            <button
-              type="button"
-              className={cn("p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800")}
-              onClick={(e) => e.preventDefault()}
-            >
-              <HoverCardTrigger className="">
-                <Grid2X2XIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-              </HoverCardTrigger>
-            </button>
-            <HoverCardContent className="flex flex-col bg-zinc-100 dark:bg-zinc-800">
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().deleteRow().run()}
-                className={cn(
-                  "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                )}
-              >
-                <Rows3Icon className="w-4 h-4" />
-                <span className="text-sm">Delete Row</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().deleteColumn().run()}
-                className={cn(
-                  "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                )}
-              >
-                <Columns3Icon className="w-4 h-4" />
-                <span className="text-sm">Delete Column</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => editor.chain().focus().deleteTable().run()}
-                className={cn(
-                  "p-1.5 rounded-lg text-left flex items-center gap-3 hover:bg-zinc-100 dark:hover:bg-zinc-800",
-                )}
-              >
-                <TableIcon className="w-4 h-4" />
-                <span className="text-sm">Delete Table</span>
-              </button>
-            </HoverCardContent>
-          </HoverCard>
-
-          <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("blockquote") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Quote className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleCode().run()}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("code") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Code className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.chain().focus().setHorizontalRule().run();
-            }}
-            className={cn("p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800")}
-          >
-            <SeparatorHorizontalIcon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
-          <div className="w-px h-full mx-1 bg-zinc-200 dark:bg-zinc-800" />
-          <button
-            type="button"
-            onClick={() => {
-              const url = window.prompt("Enter URL:");
-              if (url) {
-                editor.chain().focus().setLink({ href: url }).run();
-              }
-            }}
-            className={cn(
-              "p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800",
-              editor.isActive("link") && "bg-zinc-100 dark:bg-zinc-800",
-            )}
-          >
-            <Link2Icon className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
-          </button>
+                <div className="max-w-4xl mx-auto px-6 py-16">
+                    <EditorContent
+                        editor={editor}
+                        className="prose prose-xl prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-bold prose-p:leading-relaxed prose-p:text-foreground/90 [&_.is-editor-empty]:before:content-[attr(data-placeholder)] [&_.is-editor-empty]:before:text-muted-foreground/50 [&_.is-editor-empty]:before:float-left [&_.is-editor-empty]:before:pointer-events-none"
+                    />
+                </div>
+            </div>
         </div>
-      </div>
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: It adds two characters to the editor */}
-      <div className="flex-1 overflow-y-auto cursor-text" onClick={() => editor.chain().focus().run()}>
-        <EditorContent
-          editor={editor}
-          className="[&_*]:focus:outline-none px-3 py-3 [&_.ProseMirror]:min-h-full [&_.ProseMirror]:cursor-text"
-        />
-      </div>
-    </div>
-  );
+    );
 }

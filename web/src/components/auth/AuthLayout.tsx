@@ -4,35 +4,43 @@ import Logo from "@/components/common/Logo";
 import { Navigate, Outlet, useLoaderData } from "react-router-dom";
 
 interface Props {
-  title: string;
-  subtitle: string;
-  // children: ReactNode;
+    title: string;
+    subtitle: string;
+    // children: ReactNode;
 }
 
 export default function AuthLayout({ title, subtitle }: Props) {
-  const { session } = useLoaderData();
-  if (session) return <Navigate to={"/dashboard/home"} replace />;
+    const { session } = useLoaderData();
+    if (session) return <Navigate to={"/dashboard/home"} replace />;
 
-  return (
-    <div className="min-h-screen w-full bg-linear-to-b from-zinc-100 to-white dark:from-zinc-900 dark:to-zinc-950 flex flex-col items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-sm"
-      >
-        <Logo className="mx-auto mb-6 w-full flex items-end justify-center" />
+    return (
+        <div className="min-h-screen w-full bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_120%,rgba(0,0,0,0.05),transparent)] pointer-events-none" />
 
-        <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 p-6 shadow-xl shadow-zinc-200/20 dark:shadow-zinc-950/20">
-          <h1 className="text-xl text-center font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-            {title}
-          </h1>
-          <p className="text-center text-zinc-600 dark:text-zinc-400 text-sm">
-            {subtitle}
-          </p>
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full max-w-md"
+            >
+                <div className="text-center mb-10">
+                    <Logo to="/" className="justify-center mb-8" />
+                    <h1 className="text-5xl font-serif font-bold tracking-tight mb-3">
+                        {title}
+                    </h1>
+                    <p className="text-muted-foreground text-lg">{subtitle}</p>
+                </div>
 
-          <Outlet />
+                <div className="bg-card rounded-[2rem] border border-border/50 p-10 shadow-2xl shadow-foreground/5 relative overflow-hidden">
+                    <Outlet />
+                </div>
+
+                <div className="mt-12 text-center">
+                    <p className="text-sm text-muted-foreground">
+                        &copy; 2026 QuillSpace. All rights reserved.
+                    </p>
+                </div>
+            </motion.div>
         </div>
-      </motion.div>
-    </div>
-  );
+    );
 }
