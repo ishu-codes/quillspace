@@ -67,50 +67,31 @@ export interface UploadImageResponse {
 }
 
 export function useUploadDraftImage() {
-  return useMutation<
-    UploadImageResponse,
-    Error,
-    { postId: string; file: File; onProgress?: (progress: number) => void }
-  >({
+  return useMutation<UploadImageResponse, Error, { postId: string; file: File }>({
     retry: 0, // Don't retry uploads
-    mutationFn: async ({ postId, file, onProgress }) => {
+    mutationFn: async ({ postId, file }) => {
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("file", file);
+      formData.append("featuredImg", "true");
 
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        // Track upload progress
-        if (onProgress) {
-          xhr.upload.addEventListener("progress", (event) => {
-            if (event.lengthComputable) {
-              const progress = Math.round((event.loaded / event.total) * 100);
-              onProgress(progress);
-            }
-          });
-        }
-
-        xhr.addEventListener("load", () => {
-          try {
-            const response = JSON.parse(xhr.responseText);
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve(response);
-            } else {
-              reject(new Error(response.error || "Upload failed"));
-            }
-          } catch {
-            reject(new Error("Failed to parse response"));
-          }
-        });
-
-        xhr.addEventListener("error", () => {
-          reject(new Error("Network error during upload"));
-        });
-
-        xhr.open("POST", `${BASE_URL}/api/drafts/${postId}/upload`);
-        xhr.withCredentials = true;
-        xhr.send(formData);
+      const response = await fetch(`${BASE_URL}/api/drafts/${postId}/upload`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
       });
+
+      if (!response.ok) {
+        let errorMessage = "Upload failed";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // Ignore if parsing fails
+        }
+        throw new Error(errorMessage);
+      }
+
+      return response.json() as Promise<UploadImageResponse>;
     },
   });
 }

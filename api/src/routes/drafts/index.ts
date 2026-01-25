@@ -1,30 +1,29 @@
-// import multer from "multer";
-import { handleRequest } from "@better-upload/server";
 import { type Response, Router } from "express";
+import multer from "multer";
 
 import { asyncHandler } from "../../config/handler.js";
 import { failure, success } from "../../config/response.js";
-import { imageRouter } from "../../config/upload.js";
+import { uploadImages } from "../../config/upload.js";
 import { type AuthRequest, requireAuth } from "../../middlewares/auth.js";
 import { createDraft, deleteDraftImage, getPostById, publishDraft, updateDraft } from "./controller.js";
 
 const router = Router();
 
 // Configure multer for memory storage
-// const upload = multer({
-//   storage: multer.memoryStorage(),
-//   limits: {
-//     fileSize: 10 * 1024 * 1024, // 10MB limit
-//   },
-//   fileFilter: (_req, file, cb) => {
-//     // Accept only image files
-//     if (file.mimetype.startsWith("image/*")) {
-//       cb(null, true);
-//     } else {
-//       cb(new Error("Only image files are allowed"));
-//     }
-//   },
-// });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (_req, file, cb) => {
+    // Accept only image files
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Only image files are allowed, not ${file.mimetype}`));
+    }
+  },
+});
 
 router.post(
   "/",
@@ -80,25 +79,27 @@ router.put(
 router.post(
   "/:postId/upload",
   requireAuth,
-  // upload.array("image", 10),
+  upload.array("file", 10),
   asyncHandler(async (req: AuthRequest, res: Response) => {
     const session = req.authSession!;
     const userId = session.user.id;
-    // const { postId } = req.params;
+    const { postId } = req.params;
+    const { featuredImg } = req.body;
 
-    // Construct Web Request
-    const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-    const webReq = new Request(fullUrl, {
-      method: req.method,
-      headers: new Headers(req.headers as any),
-      body: JSON.stringify(req.body),
-    });
-    webReq.headers.set("x-user-id", userId);
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length === 0) {
+      return failure(res, 400, "No image files provided");
+    }
 
-    const response = await handleRequest(webReq, imageRouter);
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
-    return success(res, response.status, jsonResponse, response.headers);
+    const result = await uploadImages(userId, postId, files);
+
+    if (!result.success) {
+      return failure(res, 400, result.message || "Upload failed");
+    }
+
+    if (featuredImg) await updateDraft(userId, postId, null, null, result.urls[0], null);
+
+    return success(res, 200, { urls: result.urls });
   }),
 );
 
