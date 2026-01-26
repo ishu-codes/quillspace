@@ -2,6 +2,7 @@ import { ChevronRight, UserMinus, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import NumberFlow from "@number-flow/react";
 
 import PostCard from "@/components/common/PostCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -128,7 +129,7 @@ export default function ProfileContent({ userId }: Props) {
               },
               {
                 title: "Followers",
-                value: followerCountExceptUser + followedByYou ? 1 : 0,
+                value: followerCountExceptUser + (followedByYou ? 1 : 0),
                 action: () => setCurrentTab("followers"),
               },
               {
@@ -137,11 +138,13 @@ export default function ProfileContent({ userId }: Props) {
                 action: () => setCurrentTab("following"),
               },
             ].map((item) => (
-              <button key={item.title} onClick={item.action} className="group text-left">
+              <button key={item.title} onClick={item.action} className="group text-center">
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1 group-hover:text-foreground transition-colors">
                   {item.title}
                 </p>
-                <h4 className="text-3xl font-serif font-bold">{item.value}</h4>
+                <h4 className="text-3xl font-serif font-bold">
+                  <NumberFlow value={item.value} />
+                </h4>
               </button>
             ))}
           </div>
