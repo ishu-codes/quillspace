@@ -1,5 +1,5 @@
 import path from "path";
-import { STORAGE_BUCKET, supabase } from "./supabase";
+import { STORAGE_BUCKET, supabase } from "./supabase.js";
 
 const extractFileName = (fileName: string) => {
   return path.parse(fileName).name;
