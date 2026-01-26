@@ -1,4 +1,4 @@
-import { BookOpen, Plus } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import NewDraft from "@/components/common/NewDraft";
