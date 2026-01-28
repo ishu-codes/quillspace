@@ -24,8 +24,9 @@ const db = new PrismaClient();
 let authConfig: ReturnType<typeof betterAuth>;
 
 try {
+  const betterAuthUrl = (process.env.BETTER_AUTH_URL || "http://localhost:1337").replace(/\/$/, "");
   authConfig = betterAuth({
-    baseURL: process.env.BETTER_AUTH_URL || "http://localhost:1337",
+    baseURL: betterAuthUrl + "/api/auth",
     trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:5173").split(",").map((origin) => origin.trim()),
     secret: process.env.BETTER_AUTH_SECRET || "",
 
@@ -42,19 +43,12 @@ try {
       updateAge: 60 * 60 * 24, // Update every day
       cookieAttributes: {
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         httpOnly: true,
         path: "/",
       },
     },
 
-    //   socialProviders: {
-    //     google: {
-    //       clientId: process.env.GITHUB_CLIENT_ID || "",
-    //       clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-    //       scopes: ["user:email"],
-    //     },
-    //   },
     plugins: [
       createUserInfoAfterSignUp(),
       // username(),
