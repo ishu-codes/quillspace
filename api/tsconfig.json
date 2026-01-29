@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "bundler", // or "node16"
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true, // if using a bundler
+
+    "outDir": "./dist",
+    "target": "es2020",
   },
 }
