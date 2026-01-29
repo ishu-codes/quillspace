@@ -1,0 +1,5 @@
+{
+  "name": "quillspace-api",
+  "compatibility_date": "2026-01-28",
+  "main": "dist/index.ts",
+}
