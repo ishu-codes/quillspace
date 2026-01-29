@@ -1,5 +1,7 @@
 {
-  "name": "quillspace-api",
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "compatibility_flags": ["nodejs_compat"],
   "compatibility_date": "2026-01-28",
+  "name": "quillspace-api",
   "main": "api/dist/index.js",
 }
