@@ -40,7 +40,7 @@ app.use(
 app.use(express.json());
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
-  return failure(res, 500, "Internal Server Error");
+  return failure(res, 500, `Internal Server Error: ${err}`);
 });
 
 // Middlewares

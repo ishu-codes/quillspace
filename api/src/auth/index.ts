@@ -16,7 +16,9 @@ export const prisma =
     log: ["error", "warn"],
   });
 
-if (process.env.NODE_ENV !== "production") {
+const isProd = process.env.NODE_ENV == "production";
+
+if (!isProd) {
   globalForPrisma.prisma = prisma;
 }
 
@@ -30,13 +32,6 @@ try {
     trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:5173").split(",").map((origin) => origin.trim()),
     secret: process.env.BETTER_AUTH_SECRET || "",
 
-    cookies: {
-      sessionToken: {
-        sameSite: "none",
-        secure: true,
-      },
-    },
-
     database: prismaAdapter(db, {
       provider: "postgresql",
     }),
@@ -46,13 +41,38 @@ try {
     },
 
     session: {
+      name: "session-token",
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
       expiresIn: 60 * 60 * 24 * 7, // 7 days
       updateAge: 60 * 60 * 24, // Update every day
       cookieAttributes: {
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
         httpOnly: true,
         path: "/",
+        domain: "quillspace-omega.vercel.app",
+      },
+      cookieCache: {
+        enabled: true,
+        maxAge: 10 * 60, // Cache duration in seconds (5 minutes)
+      },
+    },
+    advanced: {
+      cookies: {
+        session_token: {
+          name: "session-token",
+          attributes: {
+            httpOnly: true,
+            secure: isProd,
+            sameSite: isProd ? "none" : "lax",
+          },
+        },
+      },
+      defaultCookieAttributes: {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
       },
     },
 
