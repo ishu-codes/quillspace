@@ -30,6 +30,13 @@ try {
     trustedOrigins: (process.env.TRUSTED_ORIGINS || "http://localhost:5173").split(",").map((origin) => origin.trim()),
     secret: process.env.BETTER_AUTH_SECRET || "",
 
+    cookies: {
+      sessionToken: {
+        sameSite: "none",
+        secure: true,
+      },
+    },
+
     database: prismaAdapter(db, {
       provider: "postgresql",
     }),
